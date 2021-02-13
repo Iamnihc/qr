@@ -5,7 +5,7 @@ var http_1 = require("http");
 var httpServer = http_1.createServer();
 var io = require("socket.io")(httpServer, {
     cors: {
-        origin: "https://qr.chinmai.dev",
+        origin: "https://chinmai.dev",
         methods: ["GET", "POST"],
         allowedHeaders: ["movesocket"],
         credentials: true
