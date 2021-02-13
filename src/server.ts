@@ -5,15 +5,49 @@ import http from "http";
 import socketIO from "socket.io";
 import { Socket } from "dgram";
 
+var playable = [
+  "§",
+  "¤",
+  "ˁ",
+  "ˀ",
+  "֍",
+  "৩",
+  "ᐁ",
+  "⊙",
+  "⏺",
+  "☻",
+  "⚉",
+  "⛇",
+  "⛄",
+  "⛾",
+  "❁",
+  "❂",
+  "⟁",
+  "❤",
+  "❥",
+  "🐱",
+  "😼",
+  "🙀",
+  "😿",
+  "🐕",
+  "🐶",
+  "🐵",
+  "😮",
+  "⸮",
+  "?",
+];
+
 class Messasges {
-  story: string;
-  constructor(story: string) {
-    this.story = story;
-  }
+  constructor(readonly story: string, readonly story2: string) {}
 }
 
 const tessMessages = new Messasges(
-  "Hello tess"
+  "Hello tessandra, have a happy valentines day",
+  "hello again but longer, happy day"
+);
+const naomiMessages = new Messasges(
+  "Hello Naomi",
+  "maybe we do something here"
 );
 
 class Pronouns {
@@ -37,7 +71,6 @@ class Person {
   ) {}
 }
 
-
 let peopleCodes = {
   "746568": new Person(
     "7456568",
@@ -52,8 +85,8 @@ let peopleCodes = {
     "nac",
     ["Naomi", "Cheng"],
     7,
-    tessMessages,
-    "X"
+    naomiMessages,
+    "N"
   ),
 };
 

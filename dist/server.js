@@ -9,12 +9,45 @@ const path_1 = __importDefault(require("path"));
 const http_1 = __importDefault(require("http"));
 const socket_io_1 = __importDefault(require("socket.io"));
 const dgram_1 = require("dgram");
+var playable = [
+    "§",
+    "¤",
+    "ˁ",
+    "ˀ",
+    "֍",
+    "৩",
+    "ᐁ",
+    "⊙",
+    "⏺",
+    "☻",
+    "⚉",
+    "⛇",
+    "⛄",
+    "⛾",
+    "❁",
+    "❂",
+    "⟁",
+    "❤",
+    "❥",
+    "🐱",
+    "😼",
+    "🙀",
+    "😿",
+    "🐕",
+    "🐶",
+    "🐵",
+    "😮",
+    "⸮",
+    "?",
+];
 class Messasges {
-    constructor(story) {
+    constructor(story, story2) {
         this.story = story;
+        this.story2 = story2;
     }
 }
-const tessMessages = new Messasges("Hello tess");
+const tessMessages = new Messasges("Hello tessandra, have a happy valentines day", "hello again but longer, happy day");
+const naomiMessages = new Messasges("Hello Naomi", "maybe we do something here");
 class Pronouns {
     constructor(p1, p2, p3) {
         this.p1 = p1;
@@ -39,7 +72,7 @@ class Person {
 }
 let peopleCodes = {
     "746568": new Person("7456568", "teh", ["Tess", "Hornbeck"], 7, tessMessages, "X"),
-    "6e6163": new Person("6e6163", "nac", ["Naomi", "Cheng"], 7, tessMessages, "X"),
+    "6e6163": new Person("6e6163", "nac", ["Naomi", "Cheng"], 7, naomiMessages, "N"),
 };
 const port = 3000; // default port to listen
 const app = express_1.default();
