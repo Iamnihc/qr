@@ -6,12 +6,16 @@
   "author": "chinmai <me@chinmai.dev>",
   "license": "MIT",
   "scripts": {
-    "dev": "tsc-watch server.ts"
+    "dev": "tsc-watch tsdev/server.ts",
+    "prestart": "tsc",
+    "start": "node dist/server.js"
   },
   "devDependencies": {
+    "@types/express": "^4.17.11",
     "@types/node": "^14.14.27"
   },
   "dependencies": {
+    "express": "^4.17.1",
     "socket.io": "^3.1.1"
   }
 }
