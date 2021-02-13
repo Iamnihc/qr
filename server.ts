@@ -6,7 +6,7 @@ import { Server, Socket } from "socket.io";
 const httpServer = createServer();
 const io = require("socket.io")(httpServer, {
   cors: {
-    origin: "https://chinmai.dev",
+    origin: "https://chinmai.dev/",
     methods: ["GET", "POST"],
     allowedHeaders: ["movesocket"],
     credentials: true,
