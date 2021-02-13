@@ -21,6 +21,8 @@ app.set("view engine", "pug");
 app.set("views", path_1.default.join(__dirname, "views"));
 app.use(express_1.default.static("src"));
 // create the homepage route at '/'
-app.get("/", (req, res) => {
+app.get("/", (req, res) => { });
+server.listen(port, function () {
+    console.log(`listening on *:${port}`);
 });
 //# sourceMappingURL=server.js.map

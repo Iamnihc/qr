@@ -4,8 +4,7 @@ import path from "path";
 import http from "http";
 import socketIO from "socket.io";
 
-
-const port = 8080; // default port to listen
+const port = 3000; // default port to listen
 
 const app = express();
 let server = new http.Server(app);
@@ -21,8 +20,9 @@ app.set("view engine", "pug");
 app.set("views", path.join(__dirname, "views"));
 app.use(express.static("src"));
 
-
 // create the homepage route at '/'
-app.get("/", (req, res) => {
+app.get("/", (req, res) => {});
 
+server.listen(port, function () {
+  console.log(`listening on *:${port}`);
 });

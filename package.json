@@ -1,14 +1,14 @@
 {
   "name": "qr",
   "version": "1.0.0",
-  "main": "server.ts",
+  "main": "dist/server.js",
   "repository": "https://github.com/Iamnihc/qr.git",
   "author": "chinmai <me@chinmai.dev>",
   "license": "MIT",
   "scripts": {
     "dev": "tsc-watch tsdev/server.ts",
     "prestart": "tsc",
-    "start": "node dist/server.js"
+    "start": "node ."
   },
   "devDependencies": {
     "@types/express": "^4.17.11",
