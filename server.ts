@@ -14,7 +14,7 @@ const io = require("socket.io")(httpServer, {
 });
 
 io.on("connection", (socket: Socket) => {
-  // ...
+  console.log("git");
 });
 
 httpServer.listen(3000);

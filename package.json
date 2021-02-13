@@ -1,0 +1,17 @@
+{
+  "name": "qr",
+  "version": "1.0.0",
+  "main": "server.ts",
+  "repository": "https://github.com/Iamnihc/qr.git",
+  "author": "chinmai <me@chinmai.dev>",
+  "license": "MIT",
+  "scripts": {
+    "dev": "tsc-watch server.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^14.14.27"
+  },
+  "dependencies": {
+    "socket.io": "^3.1.1"
+  }
+}
