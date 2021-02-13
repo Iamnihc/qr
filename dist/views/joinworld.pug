@@ -2,5 +2,7 @@ html
   head
     title= title
     script(src="https://cdn.socket.io/socket.io-3.0.1.min.js")
-    script(src='/script.js')
-  body
+    script(src='/join.js')
+    p=message
+    form(onsubmit="redirToGame(event); return false;")
+      input(type=text, placeholder="input the game code given to you", id='code')

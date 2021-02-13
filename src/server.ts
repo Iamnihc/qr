@@ -5,50 +5,103 @@ import http from "http";
 import socketIO from "socket.io";
 import { Socket } from "dgram";
 
-var playable = [
-  "§",
-  "¤",
-  "ˁ",
-  "ˀ",
-  "֍",
-  "৩",
-  "ᐁ",
-  "⊙",
-  "⏺",
-  "☻",
-  "⚉",
-  "⛇",
-  "⛄",
-  "⛾",
-  "❁",
-  "❂",
-  "⟁",
-  "❤",
-  "❥",
-  "🐱",
-  "😼",
-  "🙀",
-  "😿",
-  "🐕",
-  "🐶",
-  "🐵",
-  "😮",
-  "⸮",
-  "?",
-];
-
-class Messasges {
-  constructor(readonly story: string, readonly story2: string) {}
+enum playable {
+  a = "§",
+  b = "¤",
+  c = "ˁ",
+  d = "ˀ",
+  e = "֍",
+  f = "৩",
+  g = "ᐁ",
+  h = "⊙",
+  i = "⏺",
+  j = "☻",
+  k = "⚉",
+  l = "⛇",
+  m = "⛄",
+  n = "⛾",
+  o = "❁",
+  p = "❂",
+  q = "⟁",
+  r = "❤",
+  s = "❥",
+  t = "🐱",
+  u = "😼",
+  v = "🙀",
+  w = "😿",
+  x = "🐕",
+  y = "🐶",
+  z = "🐵",
+  aa = "😮",
+  ab = "⸮",
+  ac = "?",
+  ae = "🧋",
 }
 
-const tessMessages = new Messasges(
+class Messasges {
+  constructor(public greets: Array<string>) {}
+}
+
+const tehMessages = new Messasges([
   "Hello tessandra, have a happy valentines day",
-  "hello again but longer, happy day"
-);
-const naomiMessages = new Messasges(
+  "hello again but longer, happy day",
+]);
+const nacMessages = new Messasges([
   "Hello Naomi",
-  "maybe we do something here"
-);
+  "maybe put some text in here",
+]);
+const lasMessages = new Messasges([
+  "Hello Lauren",
+  "maybe put some text in here",
+]);
+const almMessages = new Messasges([
+  "Hello Alex",
+  "maybe put some text in here",
+]);
+const jujMessages = new Messasges([
+  "Hello Jang",
+  "maybe put some text in here",
+]);
+const gahMessages = new Messasges([
+  "Hello Gab",
+  "maybe put some or a lot of  text in here",
+]);
+const secMessages = new Messasges([
+  "Hello Seth",
+  "maybe put some text in here",
+]);
+const gamMessages = new Messasges([
+  "Hello Gary",
+  "maybe put some text in here",
+]);
+const tycMessages = new Messasges([
+  "Hello Tyler",
+  "maybe put some text in here",
+]);
+const maeMessages = new Messasges([
+  "Hello Mayda",
+  "maybe put some text in here",
+]);
+const mieMessages = new Messasges([
+  "Hello Milla",
+  "maybe put some text in here",
+]);
+const dejMessages = new Messasges([
+  "Hello Deborah",
+  "maybe put some text in here",
+]);
+const albMessages = new Messasges([
+  "Hello Alissa",
+  "maybe put some text in here",
+]);
+const ampMessages = new Messasges([
+  "Hello Amrita",
+  "maybe put some text in here",
+]);
+const chsMessages = new Messasges([
+  "Hello Chinmai",
+  "maybe put some text in here",
+]);
 
 class Pronouns {
   constructor(public p1: string, public p2: string, public p3: string) {}
@@ -66,9 +119,15 @@ class Person {
     readonly fullname: Array<string>,
     readonly house: number,
     public msg: Messasges,
-    readonly rep: string,
+    readonly rep: playable,
     public pronoun: Pronouns = they
-  ) {}
+  ) {
+    this.msg.greets.push(`Hello, ${this.fullname[0]}`);
+    this.msg.greets.push(`Hey, ${this.fullname[0]}`);
+    this.msg.greets.push(`What's up, ${this.fullname[0]}`);
+    this.msg.greets.push(`Happy valentines day, ${this.fullname[0]}`);
+    this.msg.greets.push(`Is that ${this.fullname[0]}? I've missed you...`);
+  }
 }
 
 let peopleCodes = {
@@ -77,16 +136,16 @@ let peopleCodes = {
     "teh",
     ["Tess", "Hornbeck"],
     7,
-    tessMessages,
-    "X"
+    tehMessages,
+    playable.y
   ),
   "6e6163": new Person(
     "6e6163",
     "nac",
     ["Naomi", "Cheng"],
     7,
-    naomiMessages,
-    "N"
+    nacMessages,
+    playable.ae
   ),
 };
 
@@ -114,7 +173,7 @@ app.get("/", (req, res) => {
   });
 });
 app.use(function (req, res, next) {
-  res.status(404).render("joinworld", {
+  res.render("joinworld", {
     title: "Welcome to this... thing",
     message: "Invalid Code",
   });
