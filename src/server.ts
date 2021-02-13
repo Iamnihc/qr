@@ -36,6 +36,38 @@ enum playable {
   ab = "⸮",
   ac = "?",
   ae = "🧋",
+  af = "🍦",
+  ag = "🍴",
+  ah = "👽",
+  ai = "❤",
+  aj = "🧡",
+  ak = "💛",
+  al = "💚",
+  am = "💙",
+  an = "💜",
+  ao = "💓",
+  ap = "💕",
+  aq = "🤚",
+  ar = "📷",
+  as = "🪙",
+  at = "🗿",
+  au = "☢",
+  av = "🚫",
+  aw = "☣",
+  ax = "🅱",
+  ay = "🏳️‍🌈",
+  az = "🏳️‍⚧️",
+  ba = "🍆",
+  bb = "🍑",
+  bc = "🥞",
+  bd = "🧅",
+  be = "🔪",
+  bf = "🏍",
+  bg = "🛺",
+  bh = "🛹",
+  bi = "🏎",
+  bj = "🚗",
+  bk = "🛴",
 }
 
 class Messasges {
@@ -135,18 +167,99 @@ let peopleCodes = {
     "7456568",
     "teh",
     ["Tess", "Hornbeck"],
-    7,
+    1,
     tehMessages,
-    playable.y
+    playable.bk
   ),
   "6e6163": new Person(
     "6e6163",
     "nac",
     ["Naomi", "Cheng"],
-    7,
+    2,
     nacMessages,
     playable.ae
   ),
+  "6c6173": new Person(
+    "6c6173",
+    "las",
+    ["Lauren", "Staelin"],
+    3,
+    lasMessages,
+    playable.m
+  ),
+  "616c6d": new Person(
+    "616c6d",
+    "alm",
+    ["Alex", "McCarthy"],
+    4,
+    almMessages,
+    playable.y
+  ),
+  "6a756a": new Person(
+    "6a756a",
+    "juj",
+    ["Justin", "Jang"],
+    5,
+    jujMessages,
+    playable.v
+  ),
+  "676168": new Person(
+    "676168",
+    "gah",
+    ["Gab", "Hussain"],
+    6,
+    gahMessages,
+    playable.aq
+  ),
+  "736563": new Person(
+    "736563",
+    "sec",
+    ["Seth", "Canul"],
+    7,
+    secMessages,
+    playable.c
+  ),
+  "67616d": new Person(
+    "67616d",
+    "gam",
+    ["Gary", "Mejia-Martinez"],
+    8,
+    gamMessages,
+    playable.e
+  ),
+  "747963": new Person(
+    "747963",
+    "tyc",
+    ["Tyler", "Chow"],
+    9,
+    tycMessages,
+    playable.af
+  ),
+  "6d6165": new Person(
+    "6d6165",
+    "mae",
+    ["Mayda", "Estrada"],
+    10,
+    maeMessages,
+    playable.ah
+  ),
+  "6d6965": new Person(
+    "6d6965",
+    "mie",
+    ["Milla", "Elliott"],
+    11,
+    maeMessages,
+    playable.d
+  ),
+  "64656a": new Person(
+    "64656a",
+    "dej",
+    ["Deborah", "Jung"],
+    12,
+    maeMessages,
+    playable.ar
+  ),
+  
 };
 
 const port = 3000; // default port to listen
@@ -172,6 +285,8 @@ app.get("/", (req, res) => {
     message: "Enter Code",
   });
 });
+
+// Ivalid code (404 cheat)
 app.use(function (req, res, next) {
   res.render("joinworld", {
     title: "Welcome to this... thing",
