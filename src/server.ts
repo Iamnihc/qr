@@ -4,8 +4,7 @@ import path from "path";
 import http from "http";
 import socketIO from "socket.io";
 import { url } from "inspector";
-import * as people from'./people';
-
+import * as people from "./people";
 
 const port = 3000; // default port to listen
 
@@ -13,10 +12,14 @@ const app = express();
 let server = new http.Server(app);
 let io = new socketIO.Server(server);
 
+// Socket shit
+
 io.on("connection", function (socket: any) {
   console.log("a user connected");
   socket.on("url", (id: string) => {
     let person: any = people.peopleCodes.get(id);
+    console.log(id);
+    console.log(typeof socket);
     io.emit("person", person);
   });
 });

@@ -1,4 +1,4 @@
-import socketIO from "socket.io";
+import socketIO, { Socket } from "socket.io";
 
 export enum playable {
   a = "§",
