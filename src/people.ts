@@ -179,6 +179,8 @@ export class Person {
   websock: Socket;
   items: Array<item> = [];
   room:number
+  online=false
+  athome=false
   constructor(
     readonly code: string,
     readonly abr: string,

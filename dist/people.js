@@ -186,6 +186,8 @@ class Person {
         this.food = food;
         this.pronoun = pronoun;
         this.items = [];
+        this.online = false;
+        this.athome = false;
         this.msg.greets.push(`Hello, ${this.fullname[0]}`);
         this.msg.greets.push(`Hey, ${this.fullname[0]}`);
         this.msg.greets.push(`What's up, ${this.fullname[0]}`);
