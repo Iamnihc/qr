@@ -15,14 +15,32 @@ let io = new socketIO.Server(server);
 // Socket shit
 
 io.on("connection", function (socket: any) {
-  console.log("a user connected");
+  //console.log("a user connected");
+  let person: people.Person;
   socket.on("url", (id: string) => {
-    let person: any = people.peopleCodes.get(id.substr(1));
-    console.log(id);
-    console.log(person);
+    person = people.peopleCodes.get(id.substr(1));
+    //console.log(id);
+    //console.log(person);
     //person = JSON.stringify(person);
-    console.log(typeof socket);
+    //console.log(typeof socket);
+    person.websock = socket.id;
     socket.emit("person", person);
+  });
+  socket.on("ping", () => {
+    console.log("pingeded");
+    socket.emit("pong");
+  });
+  socket.on("move", (loc: any) => {
+    if (person == undefined) {
+      return;
+    }
+    //console.log(person);
+    //console.log(person.room == loc.room);
+    person.loc[0] += loc.mvmt[0];
+    person.loc[1] += loc.mvmt[1];
+    //socket.emit("update", person);
+    io.emit("update", person);
+    console.log(person.loc);
   });
 });
 

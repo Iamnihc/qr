@@ -150,37 +150,33 @@ const he = new Pronouns("he", "him", "his");
 const she = new Pronouns("she", "her", "hers");
 const they = new Pronouns("they", "them", "theirs");
 
-class Zone{
+class Zone {
   constructor(
-    readonly name:string,
-    readonly img:string,
+    readonly name: string,
+    readonly img: string,
     readonly doors: Array<Zone>,
-    readonly allowed:Array<string>
-  ){}
-  getAccess(user:Person){
-    if (this.allowed == []){
+    readonly allowed: Array<string>
+  ) {}
+  getAccess(user: Person) {
+    if (this.allowed == []) {
       return true;
     }
-    if (this.allowed.includes(user.code)){
+    if (this.allowed.includes(user.code)) {
       return true;
     }
     return false;
   }
 }
 
-let dangerZone = new Zone(
-  "Danger Zone!",
-  "danger",
-  [],
-  []
-)
+let dangerZone = new Zone("Danger Zone!", "danger", [], []);
 
 export class Person {
   websock: Socket;
   items: Array<item> = [];
-  room:number
-  online=false
-  athome=false
+  room: number;
+  loc: Array<number> = [0, 0];
+  online = false;
+  athome = false;
   constructor(
     readonly code: string,
     readonly abr: string,

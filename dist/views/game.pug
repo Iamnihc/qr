@@ -12,17 +12,18 @@ html
         #mainGameScreen
           #character X
         #textArea
-          a(href="/") Not you?
-
-      #inventory
-        h2#items Items
-        ul#itemList  
-          li Fork!
-      #choices
-        h2#choices Choices
-        h3 You can: 
-        ul#choiceList
-          li Do nothing!
+          
+      #sidebarWrapper
+        #inventory
+          h2 Items
+          #itemWrapper  
+            .canUse Fork!
+        #choices
+          h2 Choices
+          h3 You can: 
+          .choiceWrapper
+            .cando Do nothing!
+            .cando Wrong player code?
 
 
 

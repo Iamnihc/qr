@@ -1,10 +1,12 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto+Mono&family=Roboto+Slab&display=swap");
+
 html {
   height: 100%;
   width: 100%;
 }
 #wrapper {
   display: flex;
-  width:min-content
+  width: min-content;
 }
 #mainGameScreen {
   width: 1024px;
@@ -14,13 +16,14 @@ html {
 #textarea {
   width: 1024px;
   height: 96px;
-
+  font-family: "Roboto Mono", monospace;
   background-color: rgb(255, 209, 226);
 }
 #hoverText {
   height: 48px;
   width: 1024px;
   background-color: rgb(255, 147, 219);
+  font-family: "Roboto Mono", monospace;
 }
 * {
   text-align: center;
@@ -36,10 +39,26 @@ html {
   line-height: 20px;
 }
 #inventory {
+  font-family: "Roboto Slab", serif;
   width: 256px;
-  height: 720px;
+  height: 360px;
   background-color: aliceblue;
+}
+.canUse:hover {
+  background-color: antiquewhite;
 }
 li {
   text-align: left;
+}
+#choices {
+  font-family: "Roboto Slab", serif;
+  background-color: pink;
+  width: 256px;
+  height: 360px;
+}
+.cando {
+  background-color: pink;
+}
+.cando:hover {
+  background-color: lightpink;
 }
