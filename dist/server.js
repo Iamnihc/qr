@@ -36,10 +36,12 @@ let io = new socket_io_1.default.Server(server);
 io.on("connection", function (socket) {
     console.log("a user connected");
     socket.on("url", (id) => {
-        let person = people.peopleCodes.get(id);
+        let person = people.peopleCodes.get(id.substr(1));
         console.log(id);
+        console.log(person);
+        //person = JSON.stringify(person);
         console.log(typeof socket);
-        io.emit("person", person);
+        socket.emit("person", person);
     });
 });
 // add & configure middleware
@@ -54,7 +56,83 @@ app.get("/", (req, res) => {
         message: "Enter Code",
     });
 });
-app.get("/636873", (req, res) => {
+app.get("/746568", (req, res) => {
+    res.render("game", {
+        title: "Happy valentines day",
+    });
+});
+app.get("/6e6163", (req, res) => {
+    res.render("game", {
+        title: "Happy valentines day",
+    });
+});
+app.get("/6c6173", (req, res) => {
+    res.render("game", {
+        title: "Happy valentines day",
+    });
+});
+app.get("/616c6d", (req, res) => {
+    res.render("game", {
+        title: "Happy valentines day",
+    });
+});
+app.get("/6a756a", (req, res) => {
+    res.render("game", {
+        title: "Happy valentines day",
+    });
+});
+app.get("/676168", (req, res) => {
+    res.render("game", {
+        title: "Happy valentines day",
+    });
+});
+app.get("/736563", (req, res) => {
+    res.render("game", {
+        title: "Happy valentines day",
+    });
+});
+// gary
+app.get("/67616d", (req, res) => {
+    res.render("game", {
+        title: "Happy valentines day",
+    });
+});
+// tyler
+app.get("/747963", (req, res) => {
+    res.render("game", {
+        title: "Happy valentines day",
+    });
+});
+//mayda
+app.get("/6d6165", (req, res) => {
+    res.render("game", {
+        title: "Happy valentines day",
+    });
+});
+// Milla
+app.get("/6d6965", (req, res) => {
+    res.render("game", {
+        title: "Happy valentines day",
+    });
+});
+// Deborah
+app.get("/64656a", (req, res) => {
+    res.render("game", {
+        title: "Happy valentines day",
+    });
+});
+// alissa
+app.get("/616c62", (req, res) => {
+    res.render("game", {
+        title: "Happy valentines day",
+    });
+});
+app.get("/736563", (req, res) => {
+    res.render("game", {
+        title: "Happy valentines day",
+    });
+});
+app.get("/67616d", (req, res) => {
     res.render("game", {
         title: "Happy valentines day",
     });

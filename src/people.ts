@@ -75,12 +75,12 @@ class Messasges {
 }
 
 const tehMessages = new Messasges([
-  "Hello tessandra, have a happy valentines day",
-  "hello again but longer, happy day",
+  "Might I interest you in some cheese?",
+  "While writing the code for this, chinmai thought of this joke: ",
 ]);
 const nacMessages = new Messasges([
   "Hello Naomi",
-  "maybe put some text in here",
+  "Would you like some boba?",
 ]);
 const lasMessages = new Messasges([
   "Hello Lauren",
@@ -119,8 +119,8 @@ const mieMessages = new Messasges([
   "maybe put some text in here",
 ]);
 const dejMessages = new Messasges([
-  "Hello Deborah",
-  "maybe put some text in here",
+  "Everything is good!",
+  "Hey, the lighting over there looks pretty good!",
 ]);
 const albMessages = new Messasges([
   "Hello Alissa",
