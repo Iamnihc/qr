@@ -150,7 +150,7 @@ const he = new Pronouns("he", "him", "his");
 const she = new Pronouns("she", "her", "hers");
 const they = new Pronouns("they", "them", "theirs");
 
-class Zone {
+abstract class Zone {
   constructor(
     readonly name: string,
     readonly img: string,
@@ -394,8 +394,14 @@ export let peopleCodes = new Map([
   ],
 ]);
 
+class Hallway extends Zone{
 
-let dangerZone = new Zone("Danger Zone!", "danger", [], []);
+}
+class Bedroom extends Zone{
+
+}
+
+let dangerZone = new Hallway("Danger Zone!", "danger", [], []);
 
 let roomList:Array<Zone> = [
   dangerZone,
@@ -404,7 +410,7 @@ let roomList:Array<Zone> = [
 // Genreate most of the zones
 
 for (let j of peopleCodes.values()) {
-  roomList.push(new Zone(`${j.fullname[0]}'s Bedroom`, `${j.abr}.png`, [j.bedroomDoor], [j.code]));
+  roomList.push(new Bedroom(`${j.fullname[0]}'s Bedroom`, `${j.abr}.png`, [j.bedroomDoor], [j.code]));
 }
 
 // Placeholders for people who dont extst
@@ -412,4 +418,5 @@ roomList.push(dangerZone);
 roomList.push(dangerZone);
 roomList.push(dangerZone);
 
-roomList.push(new Zone())
+// UPDATE DOORS OF NORCAL
+roomList.push(new Hallway("North Cali", "norcal.png", [], []))

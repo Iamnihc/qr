@@ -260,17 +260,22 @@ exports.peopleCodes = new Map([
         new Person("636873", "chs", ["Chinmai", "Srinivas"], 15, chsMessages, playable.bd, item.maggi, 20),
     ],
 ]);
-let dangerZone = new Zone("Danger Zone!", "danger", [], []);
+class Hallway extends Zone {
+}
+class Bedroom extends Zone {
+}
+let dangerZone = new Hallway("Danger Zone!", "danger", [], []);
 let roomList = [
     dangerZone,
 ];
 // Genreate most of the zones
 for (let j of exports.peopleCodes.values()) {
-    roomList.push(new Zone(`${j.fullname[0]}'s Bedroom`, `${j.abr}.png`, [j.bedroomDoor], [j.code]));
+    roomList.push(new Bedroom(`${j.fullname[0]}'s Bedroom`, `${j.abr}.png`, [j.bedroomDoor], [j.code]));
 }
 // Placeholders for people who dont extst
 roomList.push(dangerZone);
 roomList.push(dangerZone);
 roomList.push(dangerZone);
-roomList.push(new Zone());
+// UPDATE DOORS OF NORCAL
+roomList.push(new Hallway("North Cali", "norcal.png", [], []));
 //# sourceMappingURL=people.js.map
