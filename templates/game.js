@@ -1,12 +1,23 @@
 var socket = io();
 var person;
+var ploc = {
+  room: 0,
+};
 
 idCode = window.location.pathname;
 window.addEventListener("load", function () {
   socket.emit("url", idCode);
 });
 
-window.addEventListener()
+window.addEventListener("keydown", (event) => {});
+
+socket.on("position", (give) => {
+  for (let person of give) {
+    if (person.code) {
+    }
+  }
+});
+
 socket.on("person", (item) => {
   console.log(item);
   person = item;

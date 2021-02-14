@@ -66,6 +66,7 @@ var playable;
     playable["bj"] = "\uD83D\uDE97";
     playable["bk"] = "\uD83D\uDEF4";
     playable["bl"] = "\uD83D\uDD90";
+    playable["bm"] = "\uD83C\uDF35";
 })(playable = exports.playable || (exports.playable = {}));
 var foods;
 (function (foods) {
@@ -83,62 +84,69 @@ const tehMessages = new Messasges([
     "Might I interest you in some cheese?",
     "While writing the code for this, chinmai thought of this joke: ",
 ]);
-const nacMessages = new Messasges([
-    "Hello Naomi",
-    "Would you like some boba?",
-]);
+const nacMessages = new Messasges(["Hello Naomi", "Would you like some boba?"]);
 const lasMessages = new Messasges([
     "Hello Lauren",
     "maybe put some text in here",
 ]);
-const almMessages = new Messasges([
-    "Hello Alex",
-    "maybe put some text in here",
-]);
+const almMessages = new Messasges(["Hello Alex", ""]);
 const jujMessages = new Messasges([
     "Hello Jang",
-    "maybe put some text in here",
+    "have you decided when we will return to monke",
 ]);
 const gahMessages = new Messasges([
     "Hello Gab",
-    "maybe put some or a lot of  text in here",
+    "have you touched some grass today?",
 ]);
-const secMessages = new Messasges([
-    "Hello Seth",
-    "maybe put some text in here",
-]);
+const secMessages = new Messasges(["Hello Seth", "pop funko something"]);
 const gamMessages = new Messasges([
     "Hello Gary",
-    "maybe put some text in here",
+    "i know youve been coding on your rpi, but have you eaten any rpi?",
 ]);
-const tycMessages = new Messasges([
-    "Hello Tyler",
-    "maybe put some text in here",
-]);
+const tycMessages = new Messasges(["Hello Tyler", "something something"]);
 const maeMessages = new Messasges([
     "Hello Mayda",
-    "maybe put some text in here",
+    "are you on tinder, cuz i would swipe right (just a joke)",
 ]);
 const mieMessages = new Messasges([
     "Hello Milla",
-    "maybe put some text in here",
+    "hey, you remind me of that one character from fireboy and lava girl",
 ]);
 const dejMessages = new Messasges([
-    "Everything is good!",
+    "Everybody is good!",
     "Hey, the lighting over there looks pretty good!",
 ]);
 const albMessages = new Messasges([
     "Hello Alissa",
-    "maybe put some text in here",
+    "something really cool and nice",
 ]);
 const ampMessages = new Messasges([
     "Hello Amrita",
-    "maybe put some text in here",
+    "have you lisened to before, you should check them out",
+    "have you lisened to before, you should check them out",
+    "have you lisened to before, you should check them out",
 ]);
-const chsMessages = new Messasges([
-    "Hello Chinmai",
-    "maybe put some text in here",
-]);
+const chsMessages = new Messasges(["Hello Chinmai", "wow cool nice sentence"]);
+var item;
+(function (item) {
+    item["buoy"] = "buoy";
+    item["bird"] = "bird";
+    item["arepa"] = "Arepas";
+    item["boba"] = "boba";
+    item["cookies"] = "cookies";
+    item["cake"] = "cake";
+    item["brownies"] = "brownies";
+    item["marcons"] = "Macrons";
+    item["dino"] = "Dino Nuggets";
+    item["pi"] = "Raspberry Pie";
+    item["ice"] = "Ice cream on the fork";
+    item["fries"] = "French Fries";
+    item["salad"] = "Salad";
+    item["cheesecake"] = "Cheesecake";
+    item["mug"] = "Mug cake";
+    item["crepe"] = "Crepe";
+    item["maggi"] = "Maggi";
+})(item || (item = {}));
 class Pronouns {
     constructor(p1, p2, p3) {
         this.p1 = p1;
@@ -149,6 +157,24 @@ class Pronouns {
 const he = new Pronouns("he", "him", "his");
 const she = new Pronouns("she", "her", "hers");
 const they = new Pronouns("they", "them", "theirs");
+class Zone {
+    constructor(name, img, doors, allowed) {
+        this.name = name;
+        this.img = img;
+        this.doors = doors;
+        this.allowed = allowed;
+    }
+    getAccess(user) {
+        if (this.allowed == []) {
+            return true;
+        }
+        if (this.allowed.includes(user.code)) {
+            return true;
+        }
+        return false;
+    }
+}
+let dangerZone = new Zone("Danger Zone!", "danger", [], []);
 class Person {
     constructor(code, abr, fullname, house, msg, rep, food, pronoun = they) {
         this.code = code;
@@ -159,75 +185,76 @@ class Person {
         this.rep = rep;
         this.food = food;
         this.pronoun = pronoun;
-        this.items = [false, false, false];
+        this.items = [];
         this.msg.greets.push(`Hello, ${this.fullname[0]}`);
         this.msg.greets.push(`Hey, ${this.fullname[0]}`);
         this.msg.greets.push(`What's up, ${this.fullname[0]}`);
         this.msg.greets.push(`Happy valentines day, ${this.fullname[0]}`);
         this.msg.greets.push(`Is that ${this.fullname[0]}? I've missed you...`);
+        this.room = this.house;
     }
 }
 exports.Person = Person;
 exports.peopleCodes = new Map([
     [
         "746568",
-        new Person("7456568", "teh", ["Tess", "Hornbeck"], 1, tehMessages, playable.bk, "Arepas"),
+        new Person("7456568", "teh", ["Tess", "Hornbeck"], 1, tehMessages, playable.bk, item.arepa),
     ],
     [
         "6e6163",
-        new Person("6e6163", "nac", ["Naomi", "Cheng"], 2, nacMessages, playable.ae, "Boba"),
+        new Person("6e6163", "nac", ["Naomi", "Cheng"], 2, nacMessages, playable.ae, item.boba),
     ],
     [
         "6c6173",
-        new Person("6c6173", "las", ["Lauren", "Staelin"], 3, lasMessages, playable.m, "Cookies"),
+        new Person("6c6173", "las", ["Lauren", "Staelin"], 3, lasMessages, playable.m, item.cookies),
     ],
     [
         "616c6d",
-        new Person("616c6d", "alm", ["Alex", "McCarthy"], 4, almMessages, playable.y, "Cake"),
+        new Person("616c6d", "alm", ["Alex", "McCarthy"], 4, almMessages, playable.y, item.cake),
     ],
     [
         "6a756a",
-        new Person("6a756a", "juj", ["Justin", "Jang"], 5, jujMessages, playable.v, "Brownies"),
+        new Person("6a756a", "juj", ["Justin", "Jang"], 5, jujMessages, playable.v, item.brownies),
     ],
     [
         "676168",
-        new Person("676168", "gah", ["Gab", "Hussain"], 6, gahMessages, playable.aq, "Macrons"),
+        new Person("676168", "gah", ["Gab", "Hussain"], 6, gahMessages, playable.aq, item.marcons),
     ],
     [
         "736563",
-        new Person("736563", "sec", ["Seth", "Canul"], 7, secMessages, playable.c, "Dino Nuggets"),
+        new Person("736563", "sec", ["Seth", "Canul"], 7, secMessages, playable.c, item.dino),
     ],
     [
         "67616d",
-        new Person("67616d", "gam", ["Gary", "Mejia-Martinez"], 8, gamMessages, playable.e, "Pizza"),
+        new Person("67616d", "gam", ["Gary", "Mejia-Martinez"], 8, gamMessages, playable.e, item.pi),
     ],
     [
         "747963",
-        new Person("747963", "tyc", ["Tyler", "Chow"], 9, tycMessages, playable.af, "Ice cream on the fork"),
+        new Person("747963", "tyc", ["Tyler", "Chow"], 9, tycMessages, playable.af, item.ice),
     ],
     [
         "6d6165",
-        new Person("6d6165", "mae", ["Mayda", "Estrada"], 10, maeMessages, playable.ah, "French Fries"),
+        new Person("6d6165", "mae", ["Mayda", "Estrada"], 10, maeMessages, playable.ah, item.fries),
     ],
     [
         "6d6965",
-        new Person("6d6965", "mie", ["Milla", "Elliott"], 11, maeMessages, playable.d, "Salad"),
+        new Person("6d6965", "mie", ["Milla", "Elliott"], 11, maeMessages, playable.d, item.salad),
     ],
     [
         "64656a",
-        new Person("64656a", "dej", ["Deborah", "Jung"], 12, dejMessages, playable.ar, "Cheesecake"),
+        new Person("64656a", "dej", ["Deborah", "Jung"], 12, dejMessages, playable.ar, item.cheesecake),
     ],
     [
         "616c62",
-        new Person("616c62", "alb", ["Alissa", "Beckerman"], 13, albMessages, playable.ag, "Mug cake"),
+        new Person("616c62", "alb", ["Alissa", "Beckerman"], 13, albMessages, playable.ag, item.mug),
     ],
     [
         "616d70",
-        new Person("616d70", "amp", ["Amrita", "Pannu"], 14, ampMessages, playable.bl, "Crepe"),
+        new Person("616d70", "amp", ["Amrita", "Pannu"], 14, ampMessages, playable.bl, item.crepe),
     ],
     [
         "636873",
-        new Person("636873", "chs", ["Chinmai", "Srinivas"], 15, chsMessages, playable.bd, "Maggi"),
+        new Person("636873", "chs", ["Chinmai", "Srinivas"], 15, chsMessages, playable.bd, item.maggi),
     ],
 ]);
 //# sourceMappingURL=people.js.map

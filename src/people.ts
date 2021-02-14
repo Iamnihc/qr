@@ -64,6 +64,7 @@ export enum playable {
   bj = "🚗",
   bk = "🛴",
   bl = "🖐",
+  bm = "🌵",
 }
 enum foods {}
 enum items {
@@ -75,65 +76,72 @@ class Messasges {
 }
 
 const tehMessages = new Messasges([
-  "Might I interest you in some cheese?",
+  "Might I interest you in some cheese?", // in some cheese or a pickle joke
   "While writing the code for this, chinmai thought of this joke: ",
 ]);
-const nacMessages = new Messasges([
-  "Hello Naomi",
-  "Would you like some boba?",
-]);
+const nacMessages = new Messasges(["Hello Naomi", "Would you like some boba?"]);
 const lasMessages = new Messasges([
   "Hello Lauren",
   "maybe put some text in here",
 ]);
-const almMessages = new Messasges([
-  "Hello Alex",
-  "maybe put some text in here",
-]);
+const almMessages = new Messasges(["Hello Alex", ""]);
 const jujMessages = new Messasges([
   "Hello Jang",
-  "maybe put some text in here",
+  "have you decided when we will return to monke",
 ]);
 const gahMessages = new Messasges([
   "Hello Gab",
-  "maybe put some or a lot of  text in here",
+  "have you touched some grass today?",
 ]);
-const secMessages = new Messasges([
-  "Hello Seth",
-  "maybe put some text in here",
-]);
+const secMessages = new Messasges(["Hello Seth", "pop funko something"]);
 const gamMessages = new Messasges([
   "Hello Gary",
-  "maybe put some text in here",
+  "i know youve been coding on your rpi, but have you eaten any rpi?",
 ]);
-const tycMessages = new Messasges([
-  "Hello Tyler",
-  "maybe put some text in here",
-]);
+const tycMessages = new Messasges(["Hello Tyler", "something something"]);
 const maeMessages = new Messasges([
   "Hello Mayda",
-  "maybe put some text in here",
+  "are you on tinder, cuz i would swipe right (just a joke)",
 ]);
 const mieMessages = new Messasges([
   "Hello Milla",
-  "maybe put some text in here",
+  "hey, you remind me of that one character from fireboy and lava girl",
 ]);
 const dejMessages = new Messasges([
-  "Everything is good!",
+  "Everybody is good!",
   "Hey, the lighting over there looks pretty good!",
 ]);
 const albMessages = new Messasges([
   "Hello Alissa",
-  "maybe put some text in here",
+  "something really cool and nice",
 ]);
 const ampMessages = new Messasges([
   "Hello Amrita",
-  "maybe put some text in here",
+  "have you lisened to before, you should check them out",
+  "have you lisened to before, you should check them out",
+  "have you lisened to before, you should check them out",
 ]);
-const chsMessages = new Messasges([
-  "Hello Chinmai",
-  "maybe put some text in here",
-]);
+const chsMessages = new Messasges(["Hello Chinmai", "wow cool nice sentence"]);
+
+enum item {
+  buoy = "buoy",
+  bird = "bird",
+  arepa = "Arepas",
+  boba = "boba",
+  cookies = "cookies",
+  cake = "cake",
+  brownies = "brownies",
+  marcons = "Macrons",
+  dino = "Dino Nuggets",
+  pi = "Raspberry Pie",
+  ice = "Ice cream on the fork",
+  fries = "French Fries",
+  salad = "Salad",
+  cheesecake = "Cheesecake",
+  mug = "Mug cake",
+  crepe = "Crepe",
+  maggi = "Maggi",
+}
 
 class Pronouns {
   constructor(public p1: string, public p2: string, public p3: string) {}
@@ -142,9 +150,35 @@ const he = new Pronouns("he", "him", "his");
 const she = new Pronouns("she", "her", "hers");
 const they = new Pronouns("they", "them", "theirs");
 
+class Zone{
+  constructor(
+    readonly name:string,
+    readonly img:string,
+    readonly doors: Array<Zone>,
+    readonly allowed:Array<string>
+  ){}
+  getAccess(user:Person){
+    if (this.allowed == []){
+      return true;
+    }
+    if (this.allowed.includes(user.code)){
+      return true;
+    }
+    return false;
+  }
+}
+
+let dangerZone = new Zone(
+  "Danger Zone!",
+  "danger",
+  [],
+  []
+)
+
 export class Person {
   websock: Socket;
-  items = [false, false, false];
+  items: Array<item> = [];
+  room:number
   constructor(
     readonly code: string,
     readonly abr: string,
@@ -152,7 +186,7 @@ export class Person {
     readonly house: number,
     public msg: Messasges,
     readonly rep: playable,
-    public food: string,
+    public food: item,
     public pronoun: Pronouns = they
   ) {
     this.msg.greets.push(`Hello, ${this.fullname[0]}`);
@@ -160,6 +194,7 @@ export class Person {
     this.msg.greets.push(`What's up, ${this.fullname[0]}`);
     this.msg.greets.push(`Happy valentines day, ${this.fullname[0]}`);
     this.msg.greets.push(`Is that ${this.fullname[0]}? I've missed you...`);
+    this.room = this.house;
   }
 }
 
@@ -173,7 +208,7 @@ export let peopleCodes = new Map([
       1,
       tehMessages,
       playable.bk,
-      "Arepas"
+      item.arepa
     ),
   ],
   [
@@ -185,7 +220,7 @@ export let peopleCodes = new Map([
       2,
       nacMessages,
       playable.ae,
-      "Boba"
+      item.boba
     ),
   ],
   [
@@ -197,7 +232,7 @@ export let peopleCodes = new Map([
       3,
       lasMessages,
       playable.m,
-      "Cookies"
+      item.cookies
     ),
   ],
   [
@@ -209,7 +244,7 @@ export let peopleCodes = new Map([
       4,
       almMessages,
       playable.y,
-      "Cake"
+      item.cake
     ),
   ],
   [
@@ -221,7 +256,7 @@ export let peopleCodes = new Map([
       5,
       jujMessages,
       playable.v,
-      "Brownies"
+      item.brownies
     ),
   ],
   [
@@ -233,7 +268,7 @@ export let peopleCodes = new Map([
       6,
       gahMessages,
       playable.aq,
-      "Macrons"
+      item.marcons
     ),
   ],
   [
@@ -245,7 +280,7 @@ export let peopleCodes = new Map([
       7,
       secMessages,
       playable.c,
-      "Dino Nuggets"
+      item.dino
     ),
   ],
   [
@@ -257,7 +292,7 @@ export let peopleCodes = new Map([
       8,
       gamMessages,
       playable.e,
-      "Pizza"
+      item.pi
     ),
   ],
   [
@@ -269,7 +304,7 @@ export let peopleCodes = new Map([
       9,
       tycMessages,
       playable.af,
-      "Ice cream on the fork"
+      item.ice
     ),
   ],
   [
@@ -281,7 +316,7 @@ export let peopleCodes = new Map([
       10,
       maeMessages,
       playable.ah,
-      "French Fries"
+      item.fries
     ),
   ],
   [
@@ -293,7 +328,7 @@ export let peopleCodes = new Map([
       11,
       maeMessages,
       playable.d,
-      "Salad"
+      item.salad
     ),
   ],
   [
@@ -305,7 +340,7 @@ export let peopleCodes = new Map([
       12,
       dejMessages,
       playable.ar,
-      "Cheesecake"
+      item.cheesecake
     ),
   ],
   [
@@ -317,7 +352,7 @@ export let peopleCodes = new Map([
       13,
       albMessages,
       playable.ag,
-      "Mug cake"
+      item.mug
     ),
   ],
   [
@@ -329,7 +364,7 @@ export let peopleCodes = new Map([
       14,
       ampMessages,
       playable.bl,
-      "Crepe"
+      item.crepe
     ),
   ],
   [
@@ -341,7 +376,7 @@ export let peopleCodes = new Map([
       15,
       chsMessages,
       playable.bd,
-      "Maggi"
+      item.maggi
     ),
   ],
 ]);
