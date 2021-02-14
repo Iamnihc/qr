@@ -32,6 +32,7 @@ app.set("view engine", "pug");
 app.set("views", path.join(__dirname, "views"));
 app.use(express.static("templates"));
 
+// Express (should be done)o
 // create the homepage route at '/'
 app.get("/", (req, res) => {
   res.render("joinworld", {

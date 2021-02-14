@@ -3,13 +3,23 @@ html
     title= "Happy valentines day from chimmy"
     script(src="https://cdn.socket.io/socket.io-3.0.1.min.js")
     script(src='/game.js')
-    script
+    link(rel='stylesheet' href='gameStyle.css')
   body
-    p(id="welcome") Loading...
-    a(href="/") Not you?
-    div(id="mainGameScreen")
-    div(id="texarea")
-    div(id="hovertext")
+    #wrapper
+      #gameSide
+        #hoverText
+          p(id="welcome") Loading...
+        #mainGameScreen
+          #character X
+        #textArea
+          a(href="/") Not you?
+
+      #inventory
+        h2#items Items
+        ul#itemList  
+          li Fork!
+
+
 
 
 

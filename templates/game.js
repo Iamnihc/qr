@@ -6,6 +6,7 @@ window.addEventListener("load", function () {
   socket.emit("url", idCode);
 });
 
+window.addEventListener()
 socket.on("person", (item) => {
   console.log(item);
   person = item;
