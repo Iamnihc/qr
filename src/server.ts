@@ -68,6 +68,7 @@ enum playable {
   bi = "🏎",
   bj = "🚗",
   bk = "🛴",
+  bl = "🖐",
 }
 
 class Messasges {
@@ -152,7 +153,8 @@ class Person {
     readonly house: number,
     public msg: Messasges,
     readonly rep: playable,
-    public pronoun: Pronouns = they
+    public food:string,
+    public pronoun: Pronouns = they,
   ) {
     this.msg.greets.push(`Hello, ${this.fullname[0]}`);
     this.msg.greets.push(`Hey, ${this.fullname[0]}`);
@@ -169,7 +171,8 @@ let peopleCodes = {
     ["Tess", "Hornbeck"],
     1,
     tehMessages,
-    playable.bk
+    playable.bk,
+    "Arepas"
   ),
   "6e6163": new Person(
     "6e6163",
@@ -177,7 +180,8 @@ let peopleCodes = {
     ["Naomi", "Cheng"],
     2,
     nacMessages,
-    playable.ae
+    playable.ae,
+    "Boba"
   ),
   "6c6173": new Person(
     "6c6173",
@@ -185,7 +189,8 @@ let peopleCodes = {
     ["Lauren", "Staelin"],
     3,
     lasMessages,
-    playable.m
+    playable.m,
+    "Cookies"
   ),
   "616c6d": new Person(
     "616c6d",
@@ -193,7 +198,8 @@ let peopleCodes = {
     ["Alex", "McCarthy"],
     4,
     almMessages,
-    playable.y
+    playable.y,
+    "Cake"
   ),
   "6a756a": new Person(
     "6a756a",
@@ -201,7 +207,8 @@ let peopleCodes = {
     ["Justin", "Jang"],
     5,
     jujMessages,
-    playable.v
+    playable.v,
+    "Brownies"
   ),
   "676168": new Person(
     "676168",
@@ -209,7 +216,8 @@ let peopleCodes = {
     ["Gab", "Hussain"],
     6,
     gahMessages,
-    playable.aq
+    playable.aq,
+    "Macrons"
   ),
   "736563": new Person(
     "736563",
@@ -217,7 +225,8 @@ let peopleCodes = {
     ["Seth", "Canul"],
     7,
     secMessages,
-    playable.c
+    playable.c,
+    "Dino Nuggets"
   ),
   "67616d": new Person(
     "67616d",
@@ -225,7 +234,8 @@ let peopleCodes = {
     ["Gary", "Mejia-Martinez"],
     8,
     gamMessages,
-    playable.e
+    playable.e,
+    "Pizza"
   ),
   "747963": new Person(
     "747963",
@@ -233,7 +243,8 @@ let peopleCodes = {
     ["Tyler", "Chow"],
     9,
     tycMessages,
-    playable.af
+    playable.af,
+    "Ice cream on the fork"
   ),
   "6d6165": new Person(
     "6d6165",
@@ -241,7 +252,8 @@ let peopleCodes = {
     ["Mayda", "Estrada"],
     10,
     maeMessages,
-    playable.ah
+    playable.ah,
+    "French Fries"
   ),
   "6d6965": new Person(
     "6d6965",
@@ -249,17 +261,45 @@ let peopleCodes = {
     ["Milla", "Elliott"],
     11,
     maeMessages,
-    playable.d
+    playable.d,
+    ""
   ),
   "64656a": new Person(
     "64656a",
     "dej",
     ["Deborah", "Jung"],
     12,
-    maeMessages,
-    playable.ar
+    dejMessages,
+    playable.ar,
+    "Cheesecake"
   ),
-  
+  "616c62": new Person(
+    "616c62",
+    "alb",
+    ["Alissa", "Beckerman"],
+    13,
+    albMessages,
+    playable.ag,
+    "Mug cake"
+  ),
+  "616d70": new Person(
+    "616d70",
+    "amp",
+    ["Amrita", "Pannu"],
+    14,
+    ampMessages,
+    playable.bl,
+    "Crepe"
+  ),
+  "636873": new Person(
+    "636873",
+    "chs",
+    ["Chinmai", "Srinivas"],
+    15,
+    chsMessages,
+    playable.bd,
+    "Maggi"
+  ),
 };
 
 const port = 3000; // default port to listen
@@ -284,6 +324,12 @@ app.get("/", (req, res) => {
     title: "Welcome to this... thing",
     message: "Enter Code",
   });
+});
+app.get("/636873", (req, res)=>{
+    res.render("joinworld", {
+      title: "Welcome to this... thing",
+      message: "Enter Code",
+    });
 });
 
 // Ivalid code (404 cheat)

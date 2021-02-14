@@ -73,6 +73,7 @@ var playable;
     playable["bi"] = "\uD83C\uDFCE";
     playable["bj"] = "\uD83D\uDE97";
     playable["bk"] = "\uD83D\uDEF4";
+    playable["bl"] = "\uD83D\uDD90";
 })(playable || (playable = {}));
 class Messasges {
     constructor(greets) {
@@ -150,13 +151,14 @@ const he = new Pronouns("he", "him", "his");
 const she = new Pronouns("she", "her", "hers");
 const they = new Pronouns("they", "them", "theirs");
 class Person {
-    constructor(code, abr, fullname, house, msg, rep, pronoun = they) {
+    constructor(code, abr, fullname, house, msg, rep, food, pronoun = they) {
         this.code = code;
         this.abr = abr;
         this.fullname = fullname;
         this.house = house;
         this.msg = msg;
         this.rep = rep;
+        this.food = food;
         this.pronoun = pronoun;
         this.ioHandler = dgram_1.Socket;
         this.msg.greets.push(`Hello, ${this.fullname[0]}`);
@@ -167,18 +169,21 @@ class Person {
     }
 }
 let peopleCodes = {
-    "746568": new Person("7456568", "teh", ["Tess", "Hornbeck"], 1, tehMessages, playable.bk),
-    "6e6163": new Person("6e6163", "nac", ["Naomi", "Cheng"], 2, nacMessages, playable.ae),
-    "6c6173": new Person("6c6173", "las", ["Lauren", "Staelin"], 3, lasMessages, playable.m),
-    "616c6d": new Person("616c6d", "alm", ["Alex", "McCarthy"], 4, almMessages, playable.y),
-    "6a756a": new Person("6a756a", "juj", ["Justin", "Jang"], 5, jujMessages, playable.v),
-    "676168": new Person("676168", "gah", ["Gab", "Hussain"], 6, gahMessages, playable.aq),
-    "736563": new Person("736563", "sec", ["Seth", "Canul"], 7, secMessages, playable.c),
-    "67616d": new Person("67616d", "gam", ["Gary", "Mejia-Martinez"], 8, gamMessages, playable.e),
-    "747963": new Person("747963", "tyc", ["Tyler", "Chow"], 9, tycMessages, playable.af),
-    "6d6165": new Person("6d6165", "mae", ["Mayda", "Estrada"], 10, maeMessages, playable.ah),
-    "6d6965": new Person("6d6965", "mie", ["Milla", "Elliott"], 11, maeMessages, playable.d),
-    "64656a": new Person("64656a", "dej", ["Deborah", "Jung"], 12, maeMessages, playable.ar),
+    "746568": new Person("7456568", "teh", ["Tess", "Hornbeck"], 1, tehMessages, playable.bk, "Arepas"),
+    "6e6163": new Person("6e6163", "nac", ["Naomi", "Cheng"], 2, nacMessages, playable.ae, "Boba"),
+    "6c6173": new Person("6c6173", "las", ["Lauren", "Staelin"], 3, lasMessages, playable.m, "Cookies"),
+    "616c6d": new Person("616c6d", "alm", ["Alex", "McCarthy"], 4, almMessages, playable.y, "Cake"),
+    "6a756a": new Person("6a756a", "juj", ["Justin", "Jang"], 5, jujMessages, playable.v, "Brownies"),
+    "676168": new Person("676168", "gah", ["Gab", "Hussain"], 6, gahMessages, playable.aq, "Macrons"),
+    "736563": new Person("736563", "sec", ["Seth", "Canul"], 7, secMessages, playable.c, "Dino Nuggets"),
+    "67616d": new Person("67616d", "gam", ["Gary", "Mejia-Martinez"], 8, gamMessages, playable.e, "Pizza"),
+    "747963": new Person("747963", "tyc", ["Tyler", "Chow"], 9, tycMessages, playable.af, "Ice cream on the fork"),
+    "6d6165": new Person("6d6165", "mae", ["Mayda", "Estrada"], 10, maeMessages, playable.ah, "French Fries"),
+    "6d6965": new Person("6d6965", "mie", ["Milla", "Elliott"], 11, maeMessages, playable.d, ""),
+    "64656a": new Person("64656a", "dej", ["Deborah", "Jung"], 12, dejMessages, playable.ar, "Cheesecake"),
+    "616c62": new Person("616c62", "alb", ["Alissa", "Beckerman"], 13, albMessages, playable.ag, "Mug cake"),
+    "616d70": new Person("616d70", "amp", ["Amrita", "Pannu"], 14, ampMessages, playable.bl, "Crepe"),
+    "636873": new Person("636873", "chs", ["Chinmai", "Srinivas"], 15, chsMessages, playable.bd, "Maggi"),
 };
 const port = 3000; // default port to listen
 const app = express_1.default();
@@ -194,6 +199,12 @@ app.set("views", path_1.default.join(__dirname, "views"));
 app.use(express_1.default.static("templates"));
 // create the homepage route at '/'
 app.get("/", (req, res) => {
+    res.render("joinworld", {
+        title: "Welcome to this... thing",
+        message: "Enter Code",
+    });
+});
+app.get("/636873", (req, res) => {
     res.render("joinworld", {
         title: "Welcome to this... thing",
         message: "Enter Code",
