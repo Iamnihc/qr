@@ -174,9 +174,8 @@ class Zone {
         return false;
     }
 }
-let dangerZone = new Zone("Danger Zone!", "danger", [], []);
 class Person {
-    constructor(code, abr, fullname, house, msg, rep, food, pronoun = they) {
+    constructor(code, abr, fullname, house, msg, rep, food, bedroomDoor, pronoun = they) {
         this.code = code;
         this.abr = abr;
         this.fullname = fullname;
@@ -184,6 +183,7 @@ class Person {
         this.msg = msg;
         this.rep = rep;
         this.food = food;
+        this.bedroomDoor = bedroomDoor;
         this.pronoun = pronoun;
         this.items = [];
         this.loc = [0, 0];
@@ -201,63 +201,76 @@ exports.Person = Person;
 exports.peopleCodes = new Map([
     [
         "746568",
-        new Person("7456568", "teh", ["Tess", "Hornbeck"], 1, tehMessages, playable.bk, item.arepa),
+        new Person("7456568", "teh", ["Tess", "Hornbeck"], 1, tehMessages, playable.bk, item.arepa, 22),
     ],
     [
         "6e6163",
-        new Person("6e6163", "nac", ["Naomi", "Cheng"], 2, nacMessages, playable.ae, item.boba),
+        new Person("6e6163", "nac", ["Naomi", "Cheng"], 2, nacMessages, playable.ae, item.boba, 19),
     ],
     [
         "6c6173",
-        new Person("6c6173", "las", ["Lauren", "Staelin"], 3, lasMessages, playable.m, item.cookies),
+        new Person("6c6173", "las", ["Lauren", "Staelin"], 3, lasMessages, playable.m, item.cookies, 22),
     ],
     [
         "616c6d",
-        new Person("616c6d", "alm", ["Alex", "McCarthy"], 4, almMessages, playable.y, item.cake),
+        new Person("616c6d", "alm", ["Alex", "McCarthy"], 4, almMessages, playable.y, item.cake, 19),
     ],
     [
         "6a756a",
-        new Person("6a756a", "juj", ["Justin", "Jang"], 5, jujMessages, playable.v, item.brownies),
+        new Person("6a756a", "juj", ["Justin", "Jang"], 5, jujMessages, playable.v, item.brownies, 21),
     ],
     [
         "676168",
-        new Person("676168", "gah", ["Gab", "Hussain"], 6, gahMessages, playable.aq, item.marcons),
+        new Person("676168", "gah", ["Gab", "Hussain"], 6, gahMessages, playable.aq, item.marcons, 22),
     ],
     [
         "736563",
-        new Person("736563", "sec", ["Seth", "Canul"], 7, secMessages, playable.c, item.dino),
+        new Person("736563", "sec", ["Seth", "Canul"], 7, secMessages, playable.c, item.dino, 21),
     ],
     [
         "67616d",
-        new Person("67616d", "gam", ["Gary", "Mejia-Martinez"], 8, gamMessages, playable.e, item.pi),
+        new Person("67616d", "gam", ["Gary", "Mejia-Martinez"], 8, gamMessages, playable.e, item.pi, 21),
     ],
     [
         "747963",
-        new Person("747963", "tyc", ["Tyler", "Chow"], 9, tycMessages, playable.af, item.ice),
+        new Person("747963", "tyc", ["Tyler", "Chow"], 9, tycMessages, playable.af, item.ice, 21),
     ],
     [
         "6d6165",
-        new Person("6d6165", "mae", ["Mayda", "Estrada"], 10, maeMessages, playable.ah, item.fries),
+        new Person("6d6165", "mae", ["Mayda", "Estrada"], 10, maeMessages, playable.ah, item.fries, 20),
     ],
     [
         "6d6965",
-        new Person("6d6965", "mie", ["Milla", "Elliott"], 11, maeMessages, playable.d, item.salad),
+        new Person("6d6965", "mie", ["Milla", "Elliott"], 11, maeMessages, playable.d, item.salad, 19),
     ],
     [
         "64656a",
-        new Person("64656a", "dej", ["Deborah", "Jung"], 12, dejMessages, playable.ar, item.cheesecake),
+        new Person("64656a", "dej", ["Deborah", "Jung"], 12, dejMessages, playable.ar, item.cheesecake, 20),
     ],
     [
         "616c62",
-        new Person("616c62", "alb", ["Alissa", "Beckerman"], 13, albMessages, playable.ag, item.mug),
+        new Person("616c62", "alb", ["Alissa", "Beckerman"], 13, albMessages, playable.ag, item.mug, 19),
     ],
     [
         "616d70",
-        new Person("616d70", "amp", ["Amrita", "Pannu"], 14, ampMessages, playable.bl, item.crepe),
+        new Person("616d70", "amp", ["Amrita", "Pannu"], 14, ampMessages, playable.bl, item.crepe, 19),
     ],
     [
         "636873",
-        new Person("636873", "chs", ["Chinmai", "Srinivas"], 15, chsMessages, playable.bd, item.maggi),
+        new Person("636873", "chs", ["Chinmai", "Srinivas"], 15, chsMessages, playable.bd, item.maggi, 20),
     ],
 ]);
+let dangerZone = new Zone("Danger Zone!", "danger", [], []);
+let roomList = [
+    dangerZone,
+];
+// Genreate most of the zones
+for (let j of exports.peopleCodes.values()) {
+    roomList.push(new Zone(`${j.fullname[0]}'s Bedroom`, `${j.abr}.png`, [j.bedroomDoor], [j.code]));
+}
+// Placeholders for people who dont extst
+roomList.push(dangerZone);
+roomList.push(dangerZone);
+roomList.push(dangerZone);
+roomList.push(new Zone());
 //# sourceMappingURL=people.js.map

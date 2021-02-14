@@ -154,7 +154,7 @@ class Zone {
   constructor(
     readonly name: string,
     readonly img: string,
-    readonly doors: Array<Zone>,
+    readonly doors: Array<number>,
     readonly allowed: Array<string>
   ) {}
   getAccess(user: Person) {
@@ -168,7 +168,6 @@ class Zone {
   }
 }
 
-let dangerZone = new Zone("Danger Zone!", "danger", [], []);
 
 export class Person {
   websock: Socket;
@@ -185,6 +184,7 @@ export class Person {
     public msg: Messasges,
     readonly rep: playable,
     public food: item,
+    public bedroomDoor:number,
     public pronoun: Pronouns = they
   ) {
     this.msg.greets.push(`Hello, ${this.fullname[0]}`);
@@ -206,7 +206,8 @@ export let peopleCodes = new Map([
       1,
       tehMessages,
       playable.bk,
-      item.arepa
+      item.arepa,
+      22
     ),
   ],
   [
@@ -218,7 +219,8 @@ export let peopleCodes = new Map([
       2,
       nacMessages,
       playable.ae,
-      item.boba
+      item.boba,
+      19
     ),
   ],
   [
@@ -230,7 +232,8 @@ export let peopleCodes = new Map([
       3,
       lasMessages,
       playable.m,
-      item.cookies
+      item.cookies,
+      22
     ),
   ],
   [
@@ -242,7 +245,8 @@ export let peopleCodes = new Map([
       4,
       almMessages,
       playable.y,
-      item.cake
+      item.cake,
+      19
     ),
   ],
   [
@@ -254,7 +258,8 @@ export let peopleCodes = new Map([
       5,
       jujMessages,
       playable.v,
-      item.brownies
+      item.brownies,
+      21
     ),
   ],
   [
@@ -266,7 +271,8 @@ export let peopleCodes = new Map([
       6,
       gahMessages,
       playable.aq,
-      item.marcons
+      item.marcons,
+      22
     ),
   ],
   [
@@ -278,7 +284,8 @@ export let peopleCodes = new Map([
       7,
       secMessages,
       playable.c,
-      item.dino
+      item.dino,
+      21
     ),
   ],
   [
@@ -290,7 +297,8 @@ export let peopleCodes = new Map([
       8,
       gamMessages,
       playable.e,
-      item.pi
+      item.pi,
+      21
     ),
   ],
   [
@@ -302,7 +310,8 @@ export let peopleCodes = new Map([
       9,
       tycMessages,
       playable.af,
-      item.ice
+      item.ice,
+      21
     ),
   ],
   [
@@ -314,7 +323,8 @@ export let peopleCodes = new Map([
       10,
       maeMessages,
       playable.ah,
-      item.fries
+      item.fries,
+      20
     ),
   ],
   [
@@ -326,7 +336,8 @@ export let peopleCodes = new Map([
       11,
       maeMessages,
       playable.d,
-      item.salad
+      item.salad,
+      19
     ),
   ],
   [
@@ -338,7 +349,8 @@ export let peopleCodes = new Map([
       12,
       dejMessages,
       playable.ar,
-      item.cheesecake
+      item.cheesecake,
+      20
     ),
   ],
   [
@@ -350,7 +362,8 @@ export let peopleCodes = new Map([
       13,
       albMessages,
       playable.ag,
-      item.mug
+      item.mug,
+      19
     ),
   ],
   [
@@ -362,7 +375,8 @@ export let peopleCodes = new Map([
       14,
       ampMessages,
       playable.bl,
-      item.crepe
+      item.crepe,
+      19
     ),
   ],
   [
@@ -374,7 +388,28 @@ export let peopleCodes = new Map([
       15,
       chsMessages,
       playable.bd,
-      item.maggi
+      item.maggi,
+      20
     ),
   ],
 ]);
+
+
+let dangerZone = new Zone("Danger Zone!", "danger", [], []);
+
+let roomList:Array<Zone> = [
+  dangerZone,
+
+];
+// Genreate most of the zones
+
+for (let j of peopleCodes.values()) {
+  roomList.push(new Zone(`${j.fullname[0]}'s Bedroom`, `${j.abr}.png`, [j.bedroomDoor], [j.code]));
+}
+
+// Placeholders for people who dont extst
+roomList.push(dangerZone);
+roomList.push(dangerZone);
+roomList.push(dangerZone);
+
+roomList.push(new Zone())
