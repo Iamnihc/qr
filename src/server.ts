@@ -4,7 +4,7 @@ import path from "path";
 import http from "http";
 import socketIO from "socket.io";
 import { url } from "inspector";
-import * as people from "./people";
+import * as peopleClass from "./people";
 
 const port = 3000; // default port to listen
 
@@ -16,9 +16,9 @@ let io = new socketIO.Server(server);
 
 io.on("connection", function (socket: any) {
   //console.log("a user connected");
-  let person: people.Person;
+  let person: peopleClass.Person;
   socket.on("url", (id: string) => {
-    person = people.peopleCodes.get(id.substr(1));
+    person = peopleClass.peopleCodes.get(id.substr(1));
     //console.log(id);
     //console.log(person);
     //person = JSON.stringify(person);
@@ -39,11 +39,10 @@ io.on("connection", function (socket: any) {
     person.loc[0] += loc.mvmt[0];
     person.loc[1] += loc.mvmt[1];
     //socket.emit("update", person);
-    io.emit("update", people.);
+    io.emit("update", peopleClass.peopleCodes.values());
     console.log(person.loc);
   });
 });
-
 
 // I shouldnt need to touch this
 // add & configure middleware
@@ -51,7 +50,6 @@ app.set("view engine", "pug");
 // Configure Express to use EJS
 app.set("views", path.join(__dirname, "views"));
 app.use(express.static("templates"));
-
 
 // Express (should be done)
 

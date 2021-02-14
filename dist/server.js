@@ -27,7 +27,7 @@ const express_1 = __importDefault(require("express"));
 const path_1 = __importDefault(require("path"));
 const http_1 = __importDefault(require("http"));
 const socket_io_1 = __importDefault(require("socket.io"));
-const people = __importStar(require("./people"));
+const peopleClass = __importStar(require("./people"));
 const port = 3000; // default port to listen
 const app = express_1.default();
 let server = new http_1.default.Server(app);
@@ -37,7 +37,7 @@ io.on("connection", function (socket) {
     //console.log("a user connected");
     let person;
     socket.on("url", (id) => {
-        person = people.peopleCodes.get(id.substr(1));
+        person = peopleClass.peopleCodes.get(id.substr(1));
         //console.log(id);
         //console.log(person);
         //person = JSON.stringify(person);
@@ -58,7 +58,7 @@ io.on("connection", function (socket) {
         person.loc[0] += loc.mvmt[0];
         person.loc[1] += loc.mvmt[1];
         //socket.emit("update", person);
-        io.emit("update", people.);
+        io.emit("update", peopleClass.peopleCodes.values());
         console.log(person.loc);
     });
 });
