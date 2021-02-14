@@ -127,12 +127,13 @@ app.get("/616c62", (req, res) => {
         title: "Happy valentines day",
     });
 });
-app.get("/736563", (req, res) => {
+app.get("/616d70", (req, res) => {
     res.render("game", {
         title: "Happy valentines day",
     });
 });
-app.get("/67616d", (req, res) => {
+// chimmy
+app.get("/636873", (req, res) => {
     res.render("game", {
         title: "Happy valentines day",
     });
