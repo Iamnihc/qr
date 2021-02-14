@@ -8,7 +8,6 @@ const express_1 = __importDefault(require("express"));
 const path_1 = __importDefault(require("path"));
 const http_1 = __importDefault(require("http"));
 const socket_io_1 = __importDefault(require("socket.io"));
-const dgram_1 = require("dgram");
 var playable;
 (function (playable) {
     playable["a"] = "\u00A7";
@@ -75,6 +74,13 @@ var playable;
     playable["bk"] = "\uD83D\uDEF4";
     playable["bl"] = "\uD83D\uDD90";
 })(playable || (playable = {}));
+var foods;
+(function (foods) {
+})(foods || (foods = {}));
+var items;
+(function (items) {
+    items[items["buoy"] = 0] = "buoy";
+})(items || (items = {}));
 class Messasges {
     constructor(greets) {
         this.greets = greets;
@@ -160,7 +166,7 @@ class Person {
         this.rep = rep;
         this.food = food;
         this.pronoun = pronoun;
-        this.ioHandler = dgram_1.Socket;
+        this.items = [false, false, false];
         this.msg.greets.push(`Hello, ${this.fullname[0]}`);
         this.msg.greets.push(`Hey, ${this.fullname[0]}`);
         this.msg.greets.push(`What's up, ${this.fullname[0]}`);
@@ -168,29 +174,78 @@ class Person {
         this.msg.greets.push(`Is that ${this.fullname[0]}? I've missed you...`);
     }
 }
-let peopleCodes = {
-    "746568": new Person("7456568", "teh", ["Tess", "Hornbeck"], 1, tehMessages, playable.bk, "Arepas"),
-    "6e6163": new Person("6e6163", "nac", ["Naomi", "Cheng"], 2, nacMessages, playable.ae, "Boba"),
-    "6c6173": new Person("6c6173", "las", ["Lauren", "Staelin"], 3, lasMessages, playable.m, "Cookies"),
-    "616c6d": new Person("616c6d", "alm", ["Alex", "McCarthy"], 4, almMessages, playable.y, "Cake"),
-    "6a756a": new Person("6a756a", "juj", ["Justin", "Jang"], 5, jujMessages, playable.v, "Brownies"),
-    "676168": new Person("676168", "gah", ["Gab", "Hussain"], 6, gahMessages, playable.aq, "Macrons"),
-    "736563": new Person("736563", "sec", ["Seth", "Canul"], 7, secMessages, playable.c, "Dino Nuggets"),
-    "67616d": new Person("67616d", "gam", ["Gary", "Mejia-Martinez"], 8, gamMessages, playable.e, "Pizza"),
-    "747963": new Person("747963", "tyc", ["Tyler", "Chow"], 9, tycMessages, playable.af, "Ice cream on the fork"),
-    "6d6165": new Person("6d6165", "mae", ["Mayda", "Estrada"], 10, maeMessages, playable.ah, "French Fries"),
-    "6d6965": new Person("6d6965", "mie", ["Milla", "Elliott"], 11, maeMessages, playable.d, ""),
-    "64656a": new Person("64656a", "dej", ["Deborah", "Jung"], 12, dejMessages, playable.ar, "Cheesecake"),
-    "616c62": new Person("616c62", "alb", ["Alissa", "Beckerman"], 13, albMessages, playable.ag, "Mug cake"),
-    "616d70": new Person("616d70", "amp", ["Amrita", "Pannu"], 14, ampMessages, playable.bl, "Crepe"),
-    "636873": new Person("636873", "chs", ["Chinmai", "Srinivas"], 15, chsMessages, playable.bd, "Maggi"),
-};
+let peopleCodes = new Map([
+    [
+        "746568",
+        new Person("7456568", "teh", ["Tess", "Hornbeck"], 1, tehMessages, playable.bk, "Arepas"),
+    ],
+    [
+        "6e6163",
+        new Person("6e6163", "nac", ["Naomi", "Cheng"], 2, nacMessages, playable.ae, "Boba"),
+    ],
+    [
+        "6c6173",
+        new Person("6c6173", "las", ["Lauren", "Staelin"], 3, lasMessages, playable.m, "Cookies"),
+    ],
+    [
+        "616c6d",
+        new Person("616c6d", "alm", ["Alex", "McCarthy"], 4, almMessages, playable.y, "Cake"),
+    ],
+    [
+        "6a756a",
+        new Person("6a756a", "juj", ["Justin", "Jang"], 5, jujMessages, playable.v, "Brownies"),
+    ],
+    [
+        "676168",
+        new Person("676168", "gah", ["Gab", "Hussain"], 6, gahMessages, playable.aq, "Macrons"),
+    ],
+    [
+        "736563",
+        new Person("736563", "sec", ["Seth", "Canul"], 7, secMessages, playable.c, "Dino Nuggets"),
+    ],
+    [
+        "67616d",
+        new Person("67616d", "gam", ["Gary", "Mejia-Martinez"], 8, gamMessages, playable.e, "Pizza"),
+    ],
+    [
+        "747963",
+        new Person("747963", "tyc", ["Tyler", "Chow"], 9, tycMessages, playable.af, "Ice cream on the fork"),
+    ],
+    [
+        "6d6165",
+        new Person("6d6165", "mae", ["Mayda", "Estrada"], 10, maeMessages, playable.ah, "French Fries"),
+    ],
+    [
+        "6d6965",
+        new Person("6d6965", "mie", ["Milla", "Elliott"], 11, maeMessages, playable.d, "Salad"),
+    ],
+    [
+        "64656a",
+        new Person("64656a", "dej", ["Deborah", "Jung"], 12, dejMessages, playable.ar, "Cheesecake"),
+    ],
+    [
+        "616c62",
+        new Person("616c62", "alb", ["Alissa", "Beckerman"], 13, albMessages, playable.ag, "Mug cake"),
+    ],
+    [
+        "616d70",
+        new Person("616d70", "amp", ["Amrita", "Pannu"], 14, ampMessages, playable.bl, "Crepe"),
+    ],
+    [
+        "636873",
+        new Person("636873", "chs", ["Chinmai", "Srinivas"], 15, chsMessages, playable.bd, "Maggi"),
+    ],
+]);
 const port = 3000; // default port to listen
 const app = express_1.default();
 let server = new http_1.default.Server(app);
 let io = new socket_io_1.default.Server(server);
 io.on("connection", function (socket) {
     console.log("a user connected");
+    socket.on("url", (id) => {
+        let person = peopleCodes.get(id);
+        io.emit("person", person);
+    });
 });
 // add & configure middleware
 app.set("view engine", "pug");
@@ -205,9 +260,8 @@ app.get("/", (req, res) => {
     });
 });
 app.get("/636873", (req, res) => {
-    res.render("joinworld", {
-        title: "Welcome to this... thing",
-        message: "Enter Code",
+    res.render("game", {
+        title: "Happy valentines day",
     });
 });
 // Ivalid code (404 cheat)

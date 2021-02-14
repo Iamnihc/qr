@@ -4,6 +4,7 @@ import path from "path";
 import http from "http";
 import socketIO from "socket.io";
 import { Socket } from "dgram";
+import { url } from "inspector";
 
 enum playable {
   a = "§",
@@ -69,6 +70,10 @@ enum playable {
   bj = "🚗",
   bk = "🛴",
   bl = "🖐",
+}
+enum foods {}
+enum items {
+  buoy,
 }
 
 class Messasges {
@@ -144,8 +149,8 @@ const she = new Pronouns("she", "her", "hers");
 const they = new Pronouns("they", "them", "theirs");
 
 class Person {
-  ioHandler = Socket;
-
+  websock: Socket;
+  items = [false, false, false];
   constructor(
     readonly code: string,
     readonly abr: string,
@@ -153,8 +158,8 @@ class Person {
     readonly house: number,
     public msg: Messasges,
     readonly rep: playable,
-    public food:string,
-    public pronoun: Pronouns = they,
+    public food: string,
+    public pronoun: Pronouns = they
   ) {
     this.msg.greets.push(`Hello, ${this.fullname[0]}`);
     this.msg.greets.push(`Hey, ${this.fullname[0]}`);
@@ -164,143 +169,188 @@ class Person {
   }
 }
 
-let peopleCodes = {
-  "746568": new Person(
-    "7456568",
-    "teh",
-    ["Tess", "Hornbeck"],
-    1,
-    tehMessages,
-    playable.bk,
-    "Arepas"
-  ),
-  "6e6163": new Person(
+let peopleCodes = new Map([
+  [
+    "746568",
+    new Person(
+      "7456568",
+      "teh",
+      ["Tess", "Hornbeck"],
+      1,
+      tehMessages,
+      playable.bk,
+      "Arepas"
+    ),
+  ],
+  [
     "6e6163",
-    "nac",
-    ["Naomi", "Cheng"],
-    2,
-    nacMessages,
-    playable.ae,
-    "Boba"
-  ),
-  "6c6173": new Person(
+    new Person(
+      "6e6163",
+      "nac",
+      ["Naomi", "Cheng"],
+      2,
+      nacMessages,
+      playable.ae,
+      "Boba"
+    ),
+  ],
+  [
     "6c6173",
-    "las",
-    ["Lauren", "Staelin"],
-    3,
-    lasMessages,
-    playable.m,
-    "Cookies"
-  ),
-  "616c6d": new Person(
+    new Person(
+      "6c6173",
+      "las",
+      ["Lauren", "Staelin"],
+      3,
+      lasMessages,
+      playable.m,
+      "Cookies"
+    ),
+  ],
+  [
     "616c6d",
-    "alm",
-    ["Alex", "McCarthy"],
-    4,
-    almMessages,
-    playable.y,
-    "Cake"
-  ),
-  "6a756a": new Person(
+    new Person(
+      "616c6d",
+      "alm",
+      ["Alex", "McCarthy"],
+      4,
+      almMessages,
+      playable.y,
+      "Cake"
+    ),
+  ],
+  [
     "6a756a",
-    "juj",
-    ["Justin", "Jang"],
-    5,
-    jujMessages,
-    playable.v,
-    "Brownies"
-  ),
-  "676168": new Person(
+    new Person(
+      "6a756a",
+      "juj",
+      ["Justin", "Jang"],
+      5,
+      jujMessages,
+      playable.v,
+      "Brownies"
+    ),
+  ],
+  [
     "676168",
-    "gah",
-    ["Gab", "Hussain"],
-    6,
-    gahMessages,
-    playable.aq,
-    "Macrons"
-  ),
-  "736563": new Person(
+    new Person(
+      "676168",
+      "gah",
+      ["Gab", "Hussain"],
+      6,
+      gahMessages,
+      playable.aq,
+      "Macrons"
+    ),
+  ],
+  [
     "736563",
-    "sec",
-    ["Seth", "Canul"],
-    7,
-    secMessages,
-    playable.c,
-    "Dino Nuggets"
-  ),
-  "67616d": new Person(
+    new Person(
+      "736563",
+      "sec",
+      ["Seth", "Canul"],
+      7,
+      secMessages,
+      playable.c,
+      "Dino Nuggets"
+    ),
+  ],
+  [
     "67616d",
-    "gam",
-    ["Gary", "Mejia-Martinez"],
-    8,
-    gamMessages,
-    playable.e,
-    "Pizza"
-  ),
-  "747963": new Person(
+    new Person(
+      "67616d",
+      "gam",
+      ["Gary", "Mejia-Martinez"],
+      8,
+      gamMessages,
+      playable.e,
+      "Pizza"
+    ),
+  ],
+  [
     "747963",
-    "tyc",
-    ["Tyler", "Chow"],
-    9,
-    tycMessages,
-    playable.af,
-    "Ice cream on the fork"
-  ),
-  "6d6165": new Person(
+    new Person(
+      "747963",
+      "tyc",
+      ["Tyler", "Chow"],
+      9,
+      tycMessages,
+      playable.af,
+      "Ice cream on the fork"
+    ),
+  ],
+  [
     "6d6165",
-    "mae",
-    ["Mayda", "Estrada"],
-    10,
-    maeMessages,
-    playable.ah,
-    "French Fries"
-  ),
-  "6d6965": new Person(
+    new Person(
+      "6d6165",
+      "mae",
+      ["Mayda", "Estrada"],
+      10,
+      maeMessages,
+      playable.ah,
+      "French Fries"
+    ),
+  ],
+  [
     "6d6965",
-    "mie",
-    ["Milla", "Elliott"],
-    11,
-    maeMessages,
-    playable.d,
-    ""
-  ),
-  "64656a": new Person(
+    new Person(
+      "6d6965",
+      "mie",
+      ["Milla", "Elliott"],
+      11,
+      maeMessages,
+      playable.d,
+      "Salad"
+    ),
+  ],
+  [
     "64656a",
-    "dej",
-    ["Deborah", "Jung"],
-    12,
-    dejMessages,
-    playable.ar,
-    "Cheesecake"
-  ),
-  "616c62": new Person(
+    new Person(
+      "64656a",
+      "dej",
+      ["Deborah", "Jung"],
+      12,
+      dejMessages,
+      playable.ar,
+      "Cheesecake"
+    ),
+  ],
+  [
     "616c62",
-    "alb",
-    ["Alissa", "Beckerman"],
-    13,
-    albMessages,
-    playable.ag,
-    "Mug cake"
-  ),
-  "616d70": new Person(
+    new Person(
+      "616c62",
+      "alb",
+      ["Alissa", "Beckerman"],
+      13,
+      albMessages,
+      playable.ag,
+      "Mug cake"
+    ),
+  ],
+  [
     "616d70",
-    "amp",
-    ["Amrita", "Pannu"],
-    14,
-    ampMessages,
-    playable.bl,
-    "Crepe"
-  ),
-  "636873": new Person(
+    new Person(
+      "616d70",
+      "amp",
+      ["Amrita", "Pannu"],
+      14,
+      ampMessages,
+      playable.bl,
+      "Crepe"
+    ),
+  ],
+  [
     "636873",
-    "chs",
-    ["Chinmai", "Srinivas"],
-    15,
-    chsMessages,
-    playable.bd,
-    "Maggi"
-  ),
-};
+    new Person(
+      "636873",
+      "chs",
+      ["Chinmai", "Srinivas"],
+      15,
+      chsMessages,
+      playable.bd,
+      "Maggi"
+    ),
+  ],
+]);
 
 const port = 3000; // default port to listen
 
@@ -310,6 +360,10 @@ let io = new socketIO.Server(server);
 
 io.on("connection", function (socket: any) {
   console.log("a user connected");
+  socket.on("url", (id: string) => {
+    let person: any = peopleCodes.get(id);
+    io.emit("person", person);
+  });
 });
 
 // add & configure middleware
@@ -325,11 +379,10 @@ app.get("/", (req, res) => {
     message: "Enter Code",
   });
 });
-app.get("/636873", (req, res)=>{
-    res.render("joinworld", {
-      title: "Welcome to this... thing",
-      message: "Enter Code",
-    });
+app.get("/636873", (req, res) => {
+  res.render("game", {
+    title: "Happy valentines day",
+  });
 });
 
 // Ivalid code (404 cheat)
