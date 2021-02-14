@@ -150,25 +150,6 @@ const he = new Pronouns("he", "him", "his");
 const she = new Pronouns("she", "her", "hers");
 const they = new Pronouns("they", "them", "theirs");
 
-abstract class Zone {
-  constructor(
-    readonly name: string,
-    readonly img: string,
-    readonly doors: Array<number>,
-    readonly allowed: Array<string>
-  ) {}
-  getAccess(user: Person) {
-    if (this.allowed == []) {
-      return true;
-    }
-    if (this.allowed.includes(user.code)) {
-      return true;
-    }
-    return false;
-  }
-}
-
-
 export class Person {
   websock: Socket;
   items: Array<item> = [];
@@ -184,7 +165,7 @@ export class Person {
     public msg: Messasges,
     readonly rep: playable,
     public food: item,
-    public bedroomDoor:number,
+    public bedroomDoor: number,
     public pronoun: Pronouns = they
   ) {
     this.msg.greets.push(`Hello, ${this.fullname[0]}`);
@@ -394,23 +375,55 @@ export let peopleCodes = new Map([
   ],
 ]);
 
-class Hallway extends Zone{
-
+abstract class Zone {
+  constructor(
+    readonly name: string,
+    readonly img: string,
+    readonly doors: Array<number>
+  ) {}
+  abstract getAccess(user: Person): boolean;
 }
-class Bedroom extends Zone{
 
+class Hallway extends Zone {
+  getAccess(user: Person) {
+    return true;
+  }
+}
+class Bedroom extends Zone {
+  owner: string;
+  allowed: Array<string>;
+  constructor(user: Person) {
+    super(`${user.fullname[0]}'s Bedroom`, `${user.abr}.png`, [
+      user.bedroomDoor,
+    ]);
+    this.owner = user.code;
+  }
+  getAccess(user: Person) {
+    if (this.allowed.includes(user.code)) {
+      return true;
+    }
+    if (this.owner == user.code) {
+      return true;
+    }
+  }
+  giveAccess(id: string): void;
+  giveAccess(id: string, user: Person): void;
+  giveAccess(id: string, user?: Person) {
+    if (user == undefined) {
+      this.allowed.push(id);
+    } else {
+      this.allowed.push(user.code);
+    }
+  }
 }
 
-let dangerZone = new Hallway("Danger Zone!", "danger", [], []);
+let dangerZone = new Hallway("Danger Zone!", "danger", [20]);
 
-let roomList:Array<Zone> = [
-  dangerZone,
-
-];
+let roomList: Array<Zone> = [dangerZone];
 // Genreate most of the zones
 
 for (let j of peopleCodes.values()) {
-  roomList.push(new Bedroom(`${j.fullname[0]}'s Bedroom`, `${j.abr}.png`, [j.bedroomDoor], [j.code]));
+  roomList.push(new Bedroom(j));
 }
 
 // Placeholders for people who dont extst
@@ -419,4 +432,16 @@ roomList.push(dangerZone);
 roomList.push(dangerZone);
 
 // UPDATE DOORS OF NORCAL
-roomList.push(new Hallway("North Cali", "norcal.png", [], []))
+roomList.push(
+  new Hallway("North California", "norcal.png", [20, 2, 14, 4, 13, 11])
+);
+// One for central cali
+roomList.push(
+  new Hallway("Central California", "cencal.png", [21, 10, 15, 19, 0, 12])
+);
+// socal
+roomList.push(
+  new Hallway("Greater La Area", "socal.png", [9, 7, 8, 20, 22, 5])
+);
+// east coast losers
+roomList.push(new Hallway("East Coast", "eastcoast.png", [3, 21, 0, 0, 1, 6]));

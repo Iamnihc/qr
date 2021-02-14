@@ -157,23 +157,6 @@ class Pronouns {
 const he = new Pronouns("he", "him", "his");
 const she = new Pronouns("she", "her", "hers");
 const they = new Pronouns("they", "them", "theirs");
-class Zone {
-    constructor(name, img, doors, allowed) {
-        this.name = name;
-        this.img = img;
-        this.doors = doors;
-        this.allowed = allowed;
-    }
-    getAccess(user) {
-        if (this.allowed == []) {
-            return true;
-        }
-        if (this.allowed.includes(user.code)) {
-            return true;
-        }
-        return false;
-    }
-}
 class Person {
     constructor(code, abr, fullname, house, msg, rep, food, bedroomDoor, pronoun = they) {
         this.code = code;
@@ -260,22 +243,58 @@ exports.peopleCodes = new Map([
         new Person("636873", "chs", ["Chinmai", "Srinivas"], 15, chsMessages, playable.bd, item.maggi, 20),
     ],
 ]);
+class Zone {
+    constructor(name, img, doors) {
+        this.name = name;
+        this.img = img;
+        this.doors = doors;
+    }
+}
 class Hallway extends Zone {
+    getAccess(user) {
+        return true;
+    }
 }
 class Bedroom extends Zone {
+    constructor(user) {
+        super(`${user.fullname[0]}'s Bedroom`, `${user.abr}.png`, [
+            user.bedroomDoor,
+        ]);
+        this.owner = user.code;
+    }
+    getAccess(user) {
+        if (this.allowed.includes(user.code)) {
+            return true;
+        }
+        if (this.owner == user.code) {
+            return true;
+        }
+    }
+    giveAccess(id, user) {
+        if (user == undefined) {
+            this.allowed.push(id);
+        }
+        else {
+            this.allowed.push(user.code);
+        }
+    }
 }
-let dangerZone = new Hallway("Danger Zone!", "danger", [], []);
-let roomList = [
-    dangerZone,
-];
+let dangerZone = new Hallway("Danger Zone!", "danger", [20]);
+let roomList = [dangerZone];
 // Genreate most of the zones
 for (let j of exports.peopleCodes.values()) {
-    roomList.push(new Bedroom(`${j.fullname[0]}'s Bedroom`, `${j.abr}.png`, [j.bedroomDoor], [j.code]));
+    roomList.push(new Bedroom(j));
 }
 // Placeholders for people who dont extst
 roomList.push(dangerZone);
 roomList.push(dangerZone);
 roomList.push(dangerZone);
 // UPDATE DOORS OF NORCAL
-roomList.push(new Hallway("North Cali", "norcal.png", [], []));
+roomList.push(new Hallway("North California", "norcal.png", [20, 2, 14, 4, 13, 11]));
+// One for central cali
+roomList.push(new Hallway("Central California", "cencal.png", [21, 10, 15, 19, 0, 12]));
+// socal
+roomList.push(new Hallway("Greater La Area", "socal.png", [9, 7, 8, 20, 22, 5]));
+// east coast losers
+roomList.push(new Hallway("East Coast", "eastcoast.png", [3, 21, 0, 0, 1, 6]));
 //# sourceMappingURL=people.js.map
