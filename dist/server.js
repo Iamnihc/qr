@@ -58,17 +58,17 @@ io.on("connection", function (socket) {
         person.loc[0] += loc.mvmt[0];
         person.loc[1] += loc.mvmt[1];
         //socket.emit("update", person);
-        io.emit("update", person);
+        io.emit("update", people.);
         console.log(person.loc);
     });
 });
+// I shouldnt need to touch this
 // add & configure middleware
 app.set("view engine", "pug");
 // Configure Express to use EJS
 app.set("views", path_1.default.join(__dirname, "views"));
 app.use(express_1.default.static("templates"));
-// Express (should be done)o
-// create the homepage route at '/'
+// Express (should be done)
 app.get("/", (req, res) => {
     res.render("joinworld", {
         title: "Welcome to this... thing",
