@@ -11,6 +11,11 @@ const port = 3000; // default port to listen
 const app = express();
 let server = new http.Server(app);
 let io = new socketIO.Server(server);
+const charWidth = 20;
+const windowBounds = {
+  x: { min: 0, max: 1024 - charWidth },
+  y: { min: 0, max: 576 - charWidth },
+};
 
 // Socket shit
 
@@ -37,11 +42,25 @@ io.on("connection", function (socket: any) {
     }
     //console.log(person);
     //console.log(person.room == loc.room);
-    if()
+
     person.loc[0] += loc.mvmt[0];
     person.loc[1] += loc.mvmt[1];
+    if (person.loc[0] > windowBounds.x.max) {
+      person.loc[0] = windowBounds.x.max;
+    }
+    if (person.loc[0] < windowBounds.x.min) {
+      person.loc[0] = windowBounds.x.min;
+    }
+    if (person.loc[1] > windowBounds.y.max) {
+      person.loc[1] = windowBounds.y.max;
+    }
+    if (person.loc[1] < windowBounds.y.min) {
+      person.loc[1] = windowBounds.y.min;
+    }
     //socket.emit("update", person);
-    let fullList = Array.from(peopleClass.peopleCodes.values()).map(x=> x.exportList());
+    let fullList = Array.from(peopleClass.peopleCodes.values()).map((x) =>
+      x.exportList()
+    );
 
     //console.log(fullList);
     //console.log(JSON.stringify(peopleClass.peopleCodes.values));
