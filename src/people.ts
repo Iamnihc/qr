@@ -156,7 +156,7 @@ export class Person {
   currentZone: number;
   loc: Array<number> = [0, 0];
   online = false;
-  athome = false;
+  athome = () => this.currentZone == this.bedroomDoor;
   constructor(
     readonly code: string,
     readonly abr: string,
@@ -182,6 +182,8 @@ export class Person {
       rep: this.rep,
       room: this.currentZone,
       coord: this.loc,
+      online: this.online,
+      atHome: this.athome,
     };
     return out;
   }
@@ -389,9 +391,17 @@ abstract class Zone {
   constructor(
     readonly name: string,
     readonly img: string,
+    readonly num: number,
     readonly doors: Array<number>
   ) {}
   abstract getAccess(user: Person): boolean;
+  prettyObject() {
+    return {
+      name: this.name,
+      img: this.img,
+      num: this.num,
+    };
+  }
 }
 
 class Hallway extends Zone {
@@ -402,8 +412,8 @@ class Hallway extends Zone {
 class Bedroom extends Zone {
   owner: string;
   allowed: Array<string>;
-  constructor(user: Person) {
-    super(`${user.fullname[0]}'s Bedroom`, `${user.abr}.png`, [
+  constructor(user: Person, num: number) {
+    super(`${user.fullname[0]}'s Bedroom`, `${user.abr}.png`, num, [
       user.bedroomDoor,
     ]);
     this.owner = user.code;
@@ -427,13 +437,14 @@ class Bedroom extends Zone {
   }
 }
 
-let dangerZone = new Hallway("Danger Zone!", "danger", [20]);
+let dangerZone = new Hallway("Danger Zone!", "danger", 0, [20]);
 
-let roomList: Array<Zone> = [dangerZone];
+export let roomList: Array<Zone> = [dangerZone];
 // Genreate most of the zones
-
+let temp = 1;
 for (let j of peopleCodes.values()) {
-  roomList.push(new Bedroom(j));
+  roomList.push(new Bedroom(j, temp));
+  temp++;
 }
 
 // Placeholders for people who dont extst
@@ -443,15 +454,15 @@ roomList.push(dangerZone);
 
 // UPDATE DOORS OF NORCAL
 roomList.push(
-  new Hallway("North California", "norcal.png", [20, 2, 14, 4, 13, 11])
+  new Hallway("North California", "norcal.png", 19,[20, 2, 14, 4, 13, 11])
 );
 // One for central cali
 roomList.push(
-  new Hallway("Central California", "cencal.png", [21, 10, 15, 19, 0, 12])
+  new Hallway("Central California", "cencal.png",20, [21, 10, 15, 19, 0, 12])
 );
 // socal
 roomList.push(
-  new Hallway("Greater La Area", "socal.png", [9, 7, 8, 20, 22, 5])
+  new Hallway("Greater La Area", "socal.png",21, [9, 7, 8, 20, 22, 5])
 );
 // east coast losers
-roomList.push(new Hallway("East Coast", "eastcoast.png", [3, 21, 0, 0, 1, 6]));
+roomList.push(new Hallway("East Coast", "eastcoast.png", 22,[3, 21, 0, 0, 1, 6]));

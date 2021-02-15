@@ -9,13 +9,18 @@ var ploc = {
   mvmt: [0, 0],
 };
 
+function roomChange(room) {
+  document.getElementById(
+    "mainGameScreen"
+  ).style.backgroundImage = `url('${room.image}')`;
+}
 function render() {
   let childholder = document.getElementById("mainGameScreen"); // murder will occur here
+  // KILL THE CHILDREN
   while (childholder.firstChild) {
     childholder.removeChild(childholder.firstChild);
   }
 
-  // KILL THE CHILDREN
   for (let chr of allPlayers) {
     if (chr.room == ploc.room) {
       let este = document.createElement("div");
@@ -97,7 +102,6 @@ keyCheck = setInterval(keyPressLoop, 10);
 socket.on("update", (peopleList) => {
   for (let loopPerson of peopleList) {
     if (loopPerson.code == currentPlayer.code) {
-      ploc.room = loopPerson.room;
       ploc.coord = loopPerson.coord;
     }
   }
@@ -115,3 +119,11 @@ socket.on("person", (item) => {
   ).innerHTML = `Welcome, ${currentPlayer.fullname[0]}`;
   socket.emit("move", ploc);
 });
+
+socket.on("roomChange", (roomExport) => {
+  ploc.room = roomExport.roomNumber;
+  update();
+  roomChange(roomExport);
+});
+
+socket.on("hoverText", (text) => {document.getElementById()});

@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.peopleCodes = exports.Person = exports.playable = void 0;
+exports.roomList = exports.peopleCodes = exports.Person = exports.playable = void 0;
 var playable;
 (function (playable) {
     playable["a"] = "\u00A7";
@@ -171,7 +171,7 @@ class Person {
         this.items = [];
         this.loc = [0, 0];
         this.online = false;
-        this.athome = false;
+        this.athome = () => this.currentZone == this.bedroomDoor;
         this.msg.greets.push(`Hello, ${this.fullname[0]}`);
         this.msg.greets.push(`Hey, ${this.fullname[0]}`);
         this.msg.greets.push(`What's up, ${this.fullname[0]}`);
@@ -186,6 +186,8 @@ class Person {
             rep: this.rep,
             room: this.currentZone,
             coord: this.loc,
+            online: this.online,
+            atHome: this.athome,
         };
         return out;
     }
@@ -254,10 +256,18 @@ exports.peopleCodes = new Map([
     ],
 ]);
 class Zone {
-    constructor(name, img, doors) {
+    constructor(name, img, num, doors) {
         this.name = name;
         this.img = img;
+        this.num = num;
         this.doors = doors;
+    }
+    prettyObject() {
+        return {
+            name: this.name,
+            img: this.img,
+            num: this.num,
+        };
     }
 }
 class Hallway extends Zone {
@@ -266,8 +276,8 @@ class Hallway extends Zone {
     }
 }
 class Bedroom extends Zone {
-    constructor(user) {
-        super(`${user.fullname[0]}'s Bedroom`, `${user.abr}.png`, [
+    constructor(user, num) {
+        super(`${user.fullname[0]}'s Bedroom`, `${user.abr}.png`, num, [
             user.bedroomDoor,
         ]);
         this.owner = user.code;
@@ -289,22 +299,24 @@ class Bedroom extends Zone {
         }
     }
 }
-let dangerZone = new Hallway("Danger Zone!", "danger", [20]);
-let roomList = [dangerZone];
+let dangerZone = new Hallway("Danger Zone!", "danger", 0, [20]);
+exports.roomList = [dangerZone];
 // Genreate most of the zones
+let temp = 1;
 for (let j of exports.peopleCodes.values()) {
-    roomList.push(new Bedroom(j));
+    exports.roomList.push(new Bedroom(j, temp));
+    temp++;
 }
 // Placeholders for people who dont extst
-roomList.push(dangerZone);
-roomList.push(dangerZone);
-roomList.push(dangerZone);
+exports.roomList.push(dangerZone);
+exports.roomList.push(dangerZone);
+exports.roomList.push(dangerZone);
 // UPDATE DOORS OF NORCAL
-roomList.push(new Hallway("North California", "norcal.png", [20, 2, 14, 4, 13, 11]));
+exports.roomList.push(new Hallway("North California", "norcal.png", 19, [20, 2, 14, 4, 13, 11]));
 // One for central cali
-roomList.push(new Hallway("Central California", "cencal.png", [21, 10, 15, 19, 0, 12]));
+exports.roomList.push(new Hallway("Central California", "cencal.png", 20, [21, 10, 15, 19, 0, 12]));
 // socal
-roomList.push(new Hallway("Greater La Area", "socal.png", [9, 7, 8, 20, 22, 5]));
+exports.roomList.push(new Hallway("Greater La Area", "socal.png", 21, [9, 7, 8, 20, 22, 5]));
 // east coast losers
-roomList.push(new Hallway("East Coast", "eastcoast.png", [3, 21, 0, 0, 1, 6]));
+exports.roomList.push(new Hallway("East Coast", "eastcoast.png", 22, [3, 21, 0, 0, 1, 6]));
 //# sourceMappingURL=people.js.map

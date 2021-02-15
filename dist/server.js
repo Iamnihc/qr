@@ -37,6 +37,9 @@ const windowBounds = {
     x: { min: 0, max: 1024 - charWidth },
     y: { min: 0, max: 576 - charWidth },
 };
+function hitbox(coord, range) {
+    return coord > range[0] && coord < range[1];
+}
 // Socket shit
 io.on("connection", function (socket) {
     //console.log("a user connected");
@@ -49,6 +52,10 @@ io.on("connection", function (socket) {
         //console.log(typeof socket);
         person.websock = socket.id;
         socket.emit("person", person);
+        //socket.emit("update", person);
+        // Update user locations on join
+        let fullList = Array.from(peopleClass.peopleCodes.values()).map((x) => x.exportList());
+        io.emit("update", fullList);
     });
     socket.on("ping", () => {
         console.log("pingeded");
@@ -77,10 +84,17 @@ io.on("connection", function (socket) {
         }
         //socket.emit("update", person);
         let fullList = Array.from(peopleClass.peopleCodes.values()).map((x) => x.exportList());
+        if (true) {
+            let pcroomList = peopleClass.roomList.map(x => x.prettyObject());
+            socket.emit("updateRoom");
+        }
         //console.log(fullList);
         //console.log(JSON.stringify(peopleClass.peopleCodes.values));
         io.emit("update", fullList);
         console.log(person.loc);
+    });
+    socket.on("disconnected", () => {
+        person.online = false;
     });
 });
 // I shouldnt need to touch this
