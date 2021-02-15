@@ -13,15 +13,14 @@ var ploc = {
 
 function render() {
   let childholder = document.getElementById("mainGameScreen"); // murder will occur here
-      while (parent.firstChild) {
-        parent.removeChild(parent.firstChild);
+      while (childholder.firstChild) {
+        childholder.removeChild(childholder.firstChild);
       }
       // childHolder is parent
       // murdder tiem
       
   // sorry, idk how to murder children, i am wholesome...
   //mmmmm child murdering
-  childholder.remove
   let //make a box to store children!
   childholder = []
   for(let chr of inRoom){
