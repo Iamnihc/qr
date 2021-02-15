@@ -82,7 +82,7 @@ class Messasges {
 }
 const tehMessages = new Messasges([
     "Might I interest you in some cheese?",
-    "While writing the code for this, chinmai thought of this joke: ",
+    "While writing the code for this, chinmai thought of this joke: Why cant pickles be programmers? They only press DILLete",
 ]);
 const nacMessages = new Messasges(["Hello Naomi", "Would you like some boba?"]);
 const lasMessages = new Messasges([
@@ -122,7 +122,7 @@ const albMessages = new Messasges([
 ]);
 const ampMessages = new Messasges([
     "Hello Amrita",
-    "have you lisened to before, you should check them out",
+    "have you lisened to  before, you should check them out",
     "have you lisened to before, you should check them out",
     "have you lisened to before, you should check them out",
 ]);
@@ -177,7 +177,17 @@ class Person {
         this.msg.greets.push(`What's up, ${this.fullname[0]}`);
         this.msg.greets.push(`Happy valentines day, ${this.fullname[0]}`);
         this.msg.greets.push(`Is that ${this.fullname[0]}? I've missed you...`);
-        this.room = this.house;
+        this.currentZone = this.house;
+    }
+    exportList() {
+        let out = {
+            name: this.fullname,
+            code: this.code,
+            rep: this.rep,
+            room: this.currentZone,
+            coord: this.loc,
+        };
+        return out;
     }
 }
 exports.Person = Person;

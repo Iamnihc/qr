@@ -50,6 +50,7 @@ io.on("connection", function (socket) {
         socket.emit("pong");
     });
     socket.on("move", (loc) => {
+        // for some reason this happens sometimes and i dont want it\
         if (person == undefined) {
             return;
         }
@@ -58,7 +59,10 @@ io.on("connection", function (socket) {
         person.loc[0] += loc.mvmt[0];
         person.loc[1] += loc.mvmt[1];
         //socket.emit("update", person);
-        io.emit("update", peopleClass.peopleCodes.values());
+        let fullList = Array.from(peopleClass.peopleCodes.values()).map(x => x.exportList());
+        //console.log(fullList);
+        //console.log(JSON.stringify(peopleClass.peopleCodes.values));
+        io.emit("update", fullList);
         console.log(person.loc);
     });
 });

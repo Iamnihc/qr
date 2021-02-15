@@ -1,16 +1,19 @@
 var socket = io();
-var person;
+var currentPlayer;
 var keysDown = [false, false, false, false];
+var inRoom = [];
 var ploc = {
   room: 0,
   coord: [0, 0],
   mvmt: [0, 0],
 };
+
 function render() {
-  socket.emit("roominfo", ploc.room);
+  document.getElementById("character").innerHTML = currentPlayer.rep;
   document.getElementById("character").style.left = `${ploc.coord[0]}px`;
   document.getElementById("character").style.top = `${ploc.coord[1] + 50}px`;
 }
+
 function move() {
   socket.emit("movement", ploc);
 }
@@ -52,19 +55,19 @@ window.addEventListener("keyup", (event) => {
   switch (event.key) {
     case "d":
       ploc.mvmt[0] = 0;
-      keysDown[0] = true;
+      keysDown[0] = false;
       break;
     case "a":
       ploc.mvmt[0] = 0;
-      keysDown[1] = true;
+      keysDown[1] = false;
       break;
     case "w":
       ploc.mvmt[1] = 0;
-      keysDown[2] = true;
+      keysDown[2] = false;
       break;
     case "s":
       ploc.mvmt[1] = 0;
-      keysDown[3] = true;
+      keysDown[3] = false;
       break;
   }
 });
@@ -78,21 +81,24 @@ function keyPressLoop() {
 
 keyCheck = setInterval(keyPressLoop, 10);
 
-socket.on("update", (person) => {
-  ploc.coord = person.loc;
-  render();
-});
-socket.on("position", (give) => {
-  for (let person of give) {
-    if (person.code) {
+socket.on("update", (peopleList) => {
+  console.log(peopleList);
+  for (let loopPerson of peopleList) {
+    if (loopPerson.currentZone == ploc.room) {
+    }
+    if (loopPerson.code == currentPlayer.code) {
+      ploc.coord = loopPerson.coord;
     }
   }
+  render();
 });
+
+socket.on("newRoom", (peopleList) => {});
 
 socket.on("person", (item) => {
   console.log(item);
-  person = item;
+  currentPlayer = item;
   document.getElementById(
     "welcome"
-  ).innerHTML = `Welcome, ${person.fullname[0]}`;
+  ).innerHTML = `Welcome, ${currentPlayer.fullname[0]}`;
 });
