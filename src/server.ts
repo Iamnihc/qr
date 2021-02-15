@@ -20,6 +20,9 @@ const windowBounds = {
 function hitbox(coord: number, range: Array<number>) {
   return coord > range[0] && coord < range[1];
 }
+function inSquare(coord:Array<number>, box:Array<Array<number>>){
+  return 
+}
 // Socket shit
 
 io.on("connection", function (socket: any) {
@@ -27,14 +30,9 @@ io.on("connection", function (socket: any) {
   let person: peopleClass.Person;
   socket.on("url", (id: string) => {
     person = peopleClass.peopleCodes.get(id.substr(1));
-    //console.log(id);
-    //console.log(person);
-    //person = JSON.stringify(person);
-    //console.log(typeof socket);
     person.websock = socket.id;
     socket.emit("person", person);
-    //socket.emit("update", person);
-    // Update user locations on join
+
     let fullList = Array.from(peopleClass.peopleCodes.values()).map((x) =>
       x.exportList()
     );
@@ -49,9 +47,6 @@ io.on("connection", function (socket: any) {
     if (person == undefined) {
       return;
     }
-    //console.log(person);
-    //console.log(person.room == loc.room);
-
     person.loc[0] += loc.mvmt[0];
     person.loc[1] += loc.mvmt[1];
     if (person.loc[0] > windowBounds.x.max) {
@@ -70,7 +65,7 @@ io.on("connection", function (socket: any) {
     let fullList = Array.from(peopleClass.peopleCodes.values()).map((x) =>
       x.exportList()
     );
-    if (true) {
+    if (false) {
       let pcroomList = peopleClass.roomList.map(x=> x.prettyObject())
       socket.emit("updateRoom", )
     }

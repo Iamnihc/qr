@@ -126,4 +126,6 @@ socket.on("roomChange", (roomExport) => {
   roomChange(roomExport);
 });
 
-socket.on("hoverText", (text) => {document.getElementById()});
+socket.on("hoverText", (text) => {
+  document.getElementById("hoverText").innerHTML = text;
+});

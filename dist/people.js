@@ -267,6 +267,7 @@ class Zone {
             name: this.name,
             img: this.img,
             num: this.num,
+            linkedAreas: 
         };
     }
 }
@@ -276,11 +277,13 @@ class Hallway extends Zone {
     }
 }
 class Bedroom extends Zone {
-    constructor(user, num) {
-        super(`${user.fullname[0]}'s Bedroom`, `${user.abr}.png`, num, [
+    constructor(user) {
+        super(`${user.fullname[0]}'s Bedroom`, `${user.abr}.png`, 0, [
             user.bedroomDoor,
         ]);
         this.owner = user.code;
+        this.givenItem = user.food;
+        this.num = user.house;
     }
     getAccess(user) {
         if (this.allowed.includes(user.code)) {
@@ -302,10 +305,8 @@ class Bedroom extends Zone {
 let dangerZone = new Hallway("Danger Zone!", "danger", 0, [20]);
 exports.roomList = [dangerZone];
 // Genreate most of the zones
-let temp = 1;
 for (let j of exports.peopleCodes.values()) {
-    exports.roomList.push(new Bedroom(j, temp));
-    temp++;
+    exports.roomList.push(new Bedroom(j));
 }
 // Placeholders for people who dont extst
 exports.roomList.push(dangerZone);

@@ -388,10 +388,12 @@ export let peopleCodes = new Map([
 ]);
 
 abstract class Zone {
+  givenItem:item
+  
   constructor(
     readonly name: string,
     readonly img: string,
-    readonly num: number,
+    public num: number,
     readonly doors: Array<number>
   ) {}
   abstract getAccess(user: Person): boolean;
@@ -400,6 +402,7 @@ abstract class Zone {
       name: this.name,
       img: this.img,
       num: this.num,
+      linkedAreas:
     };
   }
 }
@@ -412,11 +415,14 @@ class Hallway extends Zone {
 class Bedroom extends Zone {
   owner: string;
   allowed: Array<string>;
-  constructor(user: Person, num: number) {
-    super(`${user.fullname[0]}'s Bedroom`, `${user.abr}.png`, num, [
+  constructor(user: Person) {
+    super(`${user.fullname[0]}'s Bedroom`, `${user.abr}.png`, 0, [
       user.bedroomDoor,
     ]);
     this.owner = user.code;
+    this.givenItem = user.food;
+    this.num = user.house;
+
   }
   getAccess(user: Person) {
     if (this.allowed.includes(user.code)) {
@@ -441,10 +447,10 @@ let dangerZone = new Hallway("Danger Zone!", "danger", 0, [20]);
 
 export let roomList: Array<Zone> = [dangerZone];
 // Genreate most of the zones
-let temp = 1;
+
 for (let j of peopleCodes.values()) {
-  roomList.push(new Bedroom(j, temp));
-  temp++;
+  roomList.push(new Bedroom(j));
+
 }
 
 // Placeholders for people who dont extst
