@@ -118,6 +118,7 @@ socket.on("person", (item) => {
     "welcome"
   ).innerHTML = `Welcome, ${currentPlayer.fullname[0]}`;
   socket.emit("move", ploc);
+  ploc.room = item.house;
 });
 
 socket.on("roomChange", (roomExport) => {
@@ -129,3 +130,25 @@ socket.on("roomChange", (roomExport) => {
 socket.on("hoverText", (text) => {
   document.getElementById("hoverText").innerHTML = text;
 });
+
+socket.on("actions", (actList)=>{
+  childholder = document.getElementById("choices");
+    while (childholder.firstChild) {
+      childholder.removeChild(childholder.firstChild);
+    }
+
+    for (let chr of actList) {
+      if (chr.room == ploc.room) {
+        let este = document.createElement("div");
+        este.classList.add("character");
+        este.innerHTML = chr.rep;
+        este.style.top = `${chr.coord[1] + 50}px`;
+        este.style.left = `${chr.coord[0]}px`;
+        childholder.appendChild(este);
+      }
+    }
+})
+
+function doAction(){
+  
+}

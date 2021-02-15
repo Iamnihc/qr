@@ -3,7 +3,6 @@ import express from "express";
 import path from "path";
 import http from "http";
 import socketIO from "socket.io";
-import { url } from "inspector";
 import * as peopleClass from "./people";
 
 const port = 3000; // default port to listen
@@ -16,13 +15,47 @@ const windowBounds = {
   x: { min: 0, max: 1024 - charWidth },
   y: { min: 0, max: 576 - charWidth },
 };
-
+const hitWidth = 64;
+const hitHeight = 32;
+const boxes = [
+  [
+    [502 - hitWidth, 502 + hitWidth],
+    [556 - hitHeight, 556],
+  ],
+  [
+    [259 - hitWidth, 259 + hitWidth],
+    [556 - hitHeight, 556],
+  ],
+  [
+    [259 - hitWidth, 259 + hitWidth],
+    [0, hitHeight],
+  ],
+  [
+    [502 - hitWidth, 502 + hitWidth],
+    [0, hitHeight],
+  ],
+  [
+    [753 - hitWidth, 753 + hitWidth],
+    [0, hitHeight],
+  ],
+  [
+    [753 - hitWidth, 753 + hitWidth],
+    [556 - hitHeight, 556],
+  ],
+];
 function hitbox(coord: number, range: Array<number>) {
-  return coord > range[0] && coord < range[1];
+  return coord >= range[0] && coord <= range[1];
 }
-function inSquare(coord:Array<number>, box:Array<Array<number>>){
-  return 
+function inSquare(coord: Array<number>, box: Array<Array<number>>) {
+  return hitbox(coord[0], box[0]) && hitbox(coord[1], box[1]);
 }
+function getHitBox(coord: Array<number>) {
+  for (let i = 0; i < boxes.length; i++) {
+    if (inSquare(coord, boxes[i])) return i;
+  }
+  return -1;
+}
+
 // Socket shit
 
 io.on("connection", function (socket: any) {
@@ -65,18 +98,28 @@ io.on("connection", function (socket: any) {
     let fullList = Array.from(peopleClass.peopleCodes.values()).map((x) =>
       x.exportList()
     );
-    if (false) {
-      let pcroomList = peopleClass.roomList.map(x=> x.prettyObject())
-      socket.emit("updateRoom", )
+
+    if (getHitBox(person.loc) != -1) {
+      let possibleHover =
+        peopleClass.roomList[
+          peopleClass.roomList[person.currentZone].doors[getHitBox(person.loc)]
+        ];
+      // There is no spoon... i mean door
+      if (possibleHover != undefined) {
+        socket.emit("hoverText", "To: " + possibleHover.name);
+      }
+    } else {
+      socket.emit("hoverText", "");
     }
+
     //console.log(fullList);
     //console.log(JSON.stringify(peopleClass.peopleCodes.values));
     io.emit("update", fullList);
     console.log(person.loc);
   });
-  socket.on("disconnected", ()=>{
+  socket.on("disconnected", () => {
     person.online = false;
-  })
+  });
 });
 
 // I shouldnt need to touch this

@@ -402,7 +402,6 @@ abstract class Zone {
       name: this.name,
       img: this.img,
       num: this.num,
-      linkedAreas:
     };
   }
 }
