@@ -194,7 +194,7 @@ export let peopleCodes = new Map([
       "7456568",
       "teh",
       ["Tess", "Hornbeck"],
-      1,
+      7,
       tehMessages,
       playable.bk,
       item.arepa,

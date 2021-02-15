@@ -1,9 +1,7 @@
-const { chown } = require("fs/promises");
-
 var socket = io();
 var currentPlayer;
 var keysDown = [false, false, false, false];
-var inRoom = [];
+var allPlayers = [];
 // Player locartion
 var ploc = {
   room: 0,
@@ -13,24 +11,21 @@ var ploc = {
 
 function render() {
   let childholder = document.getElementById("mainGameScreen"); // murder will occur here
-      while (childholder.firstChild) {
-        childholder.removeChild(childholder.firstChild);
-      }
-
-      // KILL THE CHILDREN
-      
-  for(let chr of inRoom){
-    if (chr.room == plock.room){
-    let este = document.createElement("div")
-    este.classList.add("character")
-    este.innerHTML = chr.rep
-    este.style.top = `${chr.coord[1] + 50}px`;
-    este.style.left = `${chr.coord[0]}px`;
-    childholder.appendChild(este);
-    }
- 
+  while (childholder.firstChild) {
+    childholder.removeChild(childholder.firstChild);
   }
 
+  // KILL THE CHILDREN
+  for (let chr of allPlayers) {
+    if (chr.room == ploc.room) {
+      let este = document.createElement("div");
+      este.classList.add("character");
+      este.innerHTML = chr.rep;
+      este.style.top = `${chr.coord[1] + 50}px`;
+      este.style.left = `${chr.coord[0]}px`;
+      childholder.appendChild(este);
+    }
+  }
 }
 
 function move() {
@@ -92,8 +87,7 @@ window.addEventListener("keyup", (event) => {
 });
 
 function keyPressLoop() {
-  //console.log(keysDown);
-  if (keysDown.some((x) => x)) {
+  if (keysDown.some((x) => x) && document.hasFocus) {
     socket.emit("move", ploc);
   }
 }
@@ -101,14 +95,13 @@ function keyPressLoop() {
 keyCheck = setInterval(keyPressLoop, 10);
 
 socket.on("update", (peopleList) => {
-  console.log(peopleList);
   for (let loopPerson of peopleList) {
-    if (loopPerson.currentZone == ploc.room) {
-    }
     if (loopPerson.code == currentPlayer.code) {
+      ploc.room = loopPerson.room;
       ploc.coord = loopPerson.coord;
     }
   }
+  allPlayers = peopleList;
   render();
 });
 
@@ -120,4 +113,5 @@ socket.on("person", (item) => {
   document.getElementById(
     "welcome"
   ).innerHTML = `Welcome, ${currentPlayer.fullname[0]}`;
+  socket.emit("move", ploc);
 });

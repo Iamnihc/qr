@@ -194,7 +194,7 @@ exports.Person = Person;
 exports.peopleCodes = new Map([
     [
         "746568",
-        new Person("7456568", "teh", ["Tess", "Hornbeck"], 1, tehMessages, playable.bk, item.arepa, 22),
+        new Person("7456568", "teh", ["Tess", "Hornbeck"], 7, tehMessages, playable.bk, item.arepa, 22),
     ],
     [
         "6e6163",

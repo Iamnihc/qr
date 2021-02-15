@@ -56,7 +56,8 @@ io.on("connection", function (socket) {
         }
         //console.log(person);
         //console.log(person.room == loc.room);
-        person.loc[0] += loc.mvmt[0];
+        if ()
+            person.loc[0] += loc.mvmt[0];
         person.loc[1] += loc.mvmt[1];
         //socket.emit("update", person);
         let fullList = Array.from(peopleClass.peopleCodes.values()).map(x => x.exportList());

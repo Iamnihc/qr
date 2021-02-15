@@ -30,7 +30,7 @@ html {
   margin-top: 0px;
   margin-left: 0px;
 }
-#character {
+.character {
   height: 20px;
   width: 20px;
   position: fixed;
