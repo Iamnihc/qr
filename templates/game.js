@@ -28,6 +28,7 @@ function render() {
       este.innerHTML = chr.rep;
       este.style.top = `${chr.coord[1] + 50}px`;
       este.style.left = `${chr.coord[0]}px`;
+      console.log("somebody in da houseee");
       childholder.appendChild(este);
     }
   }
@@ -131,24 +132,22 @@ socket.on("hoverText", (text) => {
   document.getElementById("hoverText").innerHTML = text;
 });
 
-socket.on("actions", (actList)=>{
+socket.on("actions", (actList) => {
   childholder = document.getElementById("choices");
-    while (childholder.firstChild) {
-      childholder.removeChild(childholder.firstChild);
-    }
+  while (childholder.firstChild) {
+    childholder.removeChild(childholder.firstChild);
+  }
 
-    for (let chr of actList) {
-      if (chr.room == ploc.room) {
-        let este = document.createElement("div");
-        este.classList.add("character");
-        este.innerHTML = chr.rep;
-        este.style.top = `${chr.coord[1] + 50}px`;
-        este.style.left = `${chr.coord[0]}px`;
-        childholder.appendChild(este);
-      }
-    }
-})
+  // for (let chr of actList) {
+  //   if (chr.room == ploc.room) {
+  //     let este = document.createElement("div");
+  //     este.classList.add("character");
+  //     este.innerHTML = chr.rep;
+  //     este.style.top = `${chr.coord[1] + 50}px`;
+  //     este.style.left = `${chr.coord[0]}px`;
+  //     childholder.appendChild(este);
+  //   }
+  // }
+});
 
-function doAction(){
-  
-}
+function doAction() {}
