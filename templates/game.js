@@ -1,7 +1,10 @@
+const { chown } = require("fs/promises");
+
 var socket = io();
 var currentPlayer;
 var keysDown = [false, false, false, false];
 var inRoom = [];
+// Player locartion
 var ploc = {
   room: 0,
   coord: [0, 0],
@@ -9,6 +12,36 @@ var ploc = {
 };
 
 function render() {
+  let childholder = document.getElementById("mainGameScreen"); // murder will occur here
+      while (parent.firstChild) {
+        parent.removeChild(parent.firstChild);
+      }
+      // childHolder is parent
+      // murdder tiem
+      
+  // sorry, idk how to murder children, i am wholesome...
+  //mmmmm child murdering
+  childholder.remove
+  let //make a box to store children!
+  childholder = []
+  for(let chr of inRoom){
+    if (chr.room == plock.room){
+      childholder.push(chr.room)
+    }
+    // chr object { name
+    //     let out = {
+    //   name: this.fullname,
+    //   code: this.code,
+    //   rep: this.rep,
+    //   room: this.currentZone,
+    //   coord: this.loc,
+    // };
+    // childern will enter a 'box' here
+    let este = document.createElement("div")
+    este.classList.add("character")
+    este.style.top 
+
+  }
   document.getElementById("character").innerHTML = currentPlayer.rep;
   document.getElementById("character").style.left = `${ploc.coord[0]}px`;
   document.getElementById("character").style.top = `${ploc.coord[1] + 50}px`;
