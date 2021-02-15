@@ -16,34 +16,21 @@ function render() {
       while (childholder.firstChild) {
         childholder.removeChild(childholder.firstChild);
       }
-      // childHolder is parent
-      // murdder tiem
+
+      // KILL THE CHILDREN
       
-  // sorry, idk how to murder children, i am wholesome...
-  //mmmmm child murdering
-  let //make a box to store children!
-  childholder = []
   for(let chr of inRoom){
     if (chr.room == plock.room){
-      childholder.push(chr.room)
-    }
-    // chr object { name
-    //     let out = {
-    //   name: this.fullname,
-    //   code: this.code,
-    //   rep: this.rep,
-    //   room: this.currentZone,
-    //   coord: this.loc,
-    // };
-    // childern will enter a 'box' here
     let este = document.createElement("div")
     este.classList.add("character")
-    este.style.top 
-
+    este.innerHTML = chr.rep
+    este.style.top = `${chr.coord[1] + 50}px`;
+    este.style.left = `${chr.coord[0]}px`;
+    childholder.appendChild(este);
+    }
+ 
   }
-  document.getElementById("character").innerHTML = currentPlayer.rep;
-  document.getElementById("character").style.left = `${ploc.coord[0]}px`;
-  document.getElementById("character").style.top = `${ploc.coord[1] + 50}px`;
+
 }
 
 function move() {
