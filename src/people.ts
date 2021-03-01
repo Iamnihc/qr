@@ -1,3 +1,4 @@
+import { type } from "os";
 import socketIO, { Socket } from "socket.io";
 
 export enum playable {
@@ -121,7 +122,10 @@ const ampMessages = new Messasges([
   "have you lisened to before, you should check them out",
   "have you lisened to before, you should check them out",
 ]);
-const chsMessages = new Messasges(["Hello Chinmai", "wow cool nice sentence"]);
+const chsMessages = new Messasges([
+  "Hello Chinmai",
+  "wowee cool nice sentence",
+]);
 
 enum item {
   buoy = "buoy",
@@ -149,14 +153,75 @@ class Pronouns {
 const he = new Pronouns("he", "him", "his");
 const she = new Pronouns("she", "her", "hers");
 const they = new Pronouns("they", "them", "theirs");
+export abstract class Option {
+  name: string;
+
+  constructor(public user: Person, public action: Function) {}
+  dismiss() {
+    return "Don't Do this";
+  }
+}
+export class Travel extends Option {
+  constructor(public user: Person, public goToLocation: Hallway | Bedroom) {
+    super(user, () => {
+      if (goToLocation as Hallway) user.currentZone = goToLocation.num;
+      if ("owner" in goToLocation) {
+        if (goToLocation.getAccess(user)) {
+          user.currentZone = goToLocation.num;
+        } else {
+          peopleCodes
+            .get(goToLocation.owner)
+            .options.push(
+              new EntryRequest(peopleCodes.get(goToLocation.owner))
+            );
+        }
+      }
+    });
+  }
+}
+
+class EntryRequest extends Option {
+  constructor(user: Person) {
+    super(user, () => {
+      if (user.athome) {
+        user.currentZone;
+      }
+    });
+  }
+}
 
 export class Person {
+  /**
+   * the Current active websocket
+   */
   websock: Socket;
+  /**
+   * the items at the user's disposal
+   */
   items: Array<item> = [];
+  /**
+   * the
+   * Zone
+   * that the user is currently in
+   * represented by a number that corresponds to an item in the list
+   */
   currentZone: number;
+  /**
+   * the X and Y coordinates of the player
+   */
   loc: Array<number> = [0, 0];
+  /**
+   * If the player is currently online
+   */
   online = false;
+  /**
+   * If the user is in their house
+   */
   athome = () => this.currentZone == this.bedroomDoor;
+  /**
+   * A list of actions avaliable to the user
+   */
+  options: Array<Option> = [];
   constructor(
     readonly code: string,
     readonly abr: string,
@@ -175,6 +240,15 @@ export class Person {
     this.msg.greets.push(`Is that ${this.fullname[0]}? I've missed you...`);
     this.currentZone = this.house;
   }
+  /**
+   * Returns a pretty version of the people
+   *
+   * @remarks
+   * This should be used to print
+   *
+   * @returns
+   * An object with the following data: name, code, rep, room, coord, online, atHome
+   */
   exportList() {
     let out = {
       name: this.fullname,
@@ -386,10 +460,14 @@ export let peopleCodes = new Map([
     ),
   ],
 ]);
-
+/**
+ * @class
+ * @alias Zone
+ * Test?
+ */
 abstract class Zone {
-  givenItem:item
-  
+  givenItem: item;
+
   constructor(
     readonly name: string,
     readonly img: string,
@@ -405,12 +483,19 @@ abstract class Zone {
     };
   }
 }
-
+/**
+ * A zone that has no owner, any user can come and go as they please.
+ * No authentication should be required to enter
+ */
 class Hallway extends Zone {
   getAccess(user: Person) {
     return true;
   }
 }
+/**
+ * A zone owned by one user, their personal zone.
+ * Permission from the user should be needed to enter
+ */
 class Bedroom extends Zone {
   owner: string;
   allowed: Array<string>;
@@ -421,7 +506,6 @@ class Bedroom extends Zone {
     this.owner = user.code;
     this.givenItem = user.food;
     this.num = user.house;
-
   }
   getAccess(user: Person) {
     if (this.allowed.includes(user.code)) {
@@ -444,12 +528,14 @@ class Bedroom extends Zone {
 
 let dangerZone = new Hallway("Danger Zone!", "danger", 0, [20]);
 
+/**
+ * The list of available rooms/zones that the player could ever enter
+ */
 export let roomList: Array<Zone> = [dangerZone];
 // Genreate most of the zones
 
 for (let j of peopleCodes.values()) {
   roomList.push(new Bedroom(j));
-
 }
 
 // Placeholders for people who dont extst
@@ -459,15 +545,17 @@ roomList.push(dangerZone);
 
 // UPDATE DOORS OF NORCAL
 roomList.push(
-  new Hallway("North California", "norcal.png", 19,[20, 2, 14, 4, 13, 11])
+  new Hallway("North California", "norcal.png", 19, [20, 2, 14, 4, 13, 11])
 );
 // One for central cali
 roomList.push(
-  new Hallway("Central California", "cencal.png",20, [21, 10, 15, 19, 0, 12])
+  new Hallway("Central California", "cencal.png", 20, [21, 10, 15, 19, 0, 12])
 );
 // socal
 roomList.push(
-  new Hallway("Greater La Area", "socal.png",21, [9, 7, 8, 20, 22, 5])
+  new Hallway("Greater La Area", "socal.png", 21, [9, 7, 8, 20, 22, 5])
 );
 // east coast losers
-roomList.push(new Hallway("East Coast", "eastcoast.png", 22,[3, 21, 0, 0, 1, 6]));
+roomList.push(
+  new Hallway("East Coast", "eastcoast.png", 22, [3, 21, 0, 0, 1, 6])
+);

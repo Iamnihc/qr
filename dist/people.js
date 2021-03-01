@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.roomList = exports.peopleCodes = exports.Person = exports.playable = void 0;
+exports.roomList = exports.peopleCodes = exports.Person = exports.Travel = exports.Option = exports.playable = void 0;
 var playable;
 (function (playable) {
     playable["a"] = "\u00A7";
@@ -126,7 +126,10 @@ const ampMessages = new Messasges([
     "have you lisened to before, you should check them out",
     "have you lisened to before, you should check them out",
 ]);
-const chsMessages = new Messasges(["Hello Chinmai", "wow cool nice sentence"]);
+const chsMessages = new Messasges([
+    "Hello Chinmai",
+    "wowee cool nice sentence",
+]);
 var item;
 (function (item) {
     item["buoy"] = "buoy";
@@ -157,6 +160,46 @@ class Pronouns {
 const he = new Pronouns("he", "him", "his");
 const she = new Pronouns("she", "her", "hers");
 const they = new Pronouns("they", "them", "theirs");
+class Option {
+    constructor(user, action) {
+        this.user = user;
+        this.action = action;
+    }
+    dismiss() {
+        return "Don't Do this";
+    }
+}
+exports.Option = Option;
+class Travel extends Option {
+    constructor(user, goToLocation) {
+        super(user, () => {
+            if (goToLocation)
+                user.currentZone = goToLocation.num;
+            if ("owner" in goToLocation) {
+                if (goToLocation.getAccess(user)) {
+                    user.currentZone = goToLocation.num;
+                }
+                else {
+                    exports.peopleCodes
+                        .get(goToLocation.owner)
+                        .options.push(new EntryRequest(exports.peopleCodes.get(goToLocation.owner)));
+                }
+            }
+        });
+        this.user = user;
+        this.goToLocation = goToLocation;
+    }
+}
+exports.Travel = Travel;
+class EntryRequest extends Option {
+    constructor(user) {
+        super(user, () => {
+            if (user.athome) {
+                user.currentZone;
+            }
+        });
+    }
+}
 class Person {
     constructor(code, abr, fullname, house, msg, rep, food, bedroomDoor, pronoun = they) {
         this.code = code;
@@ -168,10 +211,26 @@ class Person {
         this.food = food;
         this.bedroomDoor = bedroomDoor;
         this.pronoun = pronoun;
+        /**
+         * the items at the user's disposal
+         */
         this.items = [];
+        /**
+         * the X and Y coordinates of the player
+         */
         this.loc = [0, 0];
+        /**
+         * If the player is currently online
+         */
         this.online = false;
+        /**
+         * If the user is in their house
+         */
         this.athome = () => this.currentZone == this.bedroomDoor;
+        /**
+         * A list of actions avaliable to the user
+         */
+        this.options = [];
         this.msg.greets.push(`Hello, ${this.fullname[0]}`);
         this.msg.greets.push(`Hey, ${this.fullname[0]}`);
         this.msg.greets.push(`What's up, ${this.fullname[0]}`);
@@ -179,6 +238,15 @@ class Person {
         this.msg.greets.push(`Is that ${this.fullname[0]}? I've missed you...`);
         this.currentZone = this.house;
     }
+    /**
+     * Returns a pretty version of the people
+     *
+     * @remarks
+     * This should be used to print
+     *
+     * @returns
+     * An object with the following data: name, code, rep, room, coord, online, atHome
+     */
     exportList() {
         let out = {
             name: this.fullname,
@@ -255,6 +323,11 @@ exports.peopleCodes = new Map([
         new Person("636873", "chs", ["Chinmai", "Srinivas"], 15, chsMessages, playable.bd, item.maggi, 20),
     ],
 ]);
+/**
+ * @class
+ * @alias Zone
+ * Test?
+ */
 class Zone {
     constructor(name, img, num, doors) {
         this.name = name;
@@ -270,11 +343,19 @@ class Zone {
         };
     }
 }
+/**
+ * A zone that has no owner, any user can come and go as they please.
+ * No authentication should be required to enter
+ */
 class Hallway extends Zone {
     getAccess(user) {
         return true;
     }
 }
+/**
+ * A zone owned by one user, their personal zone.
+ * Permission from the user should be needed to enter
+ */
 class Bedroom extends Zone {
     constructor(user) {
         super(`${user.fullname[0]}'s Bedroom`, `${user.abr}.png`, 0, [
@@ -302,6 +383,9 @@ class Bedroom extends Zone {
     }
 }
 let dangerZone = new Hallway("Danger Zone!", "danger", 0, [20]);
+/**
+ * The list of available rooms/zones that the player could ever enter
+ */
 exports.roomList = [dangerZone];
 // Genreate most of the zones
 for (let j of exports.peopleCodes.values()) {
