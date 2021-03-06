@@ -1,86 +1,11 @@
 import { type } from "os";
 import socketIO, { Socket } from "socket.io";
+import { item } from "./item";
+import { Messages,tehMessages, nacMessages, lasMessages, almMessages, jujMessages, gahMessages, secMessages, gamMessages, tycMessages, maeMessages, dejMessages, albMessages, ampMessages, chsMessages } from "./Messages";
+import { playable } from "./playable";
 
-export enum playable {
-  a = "§",
-  b = "¤",
-  c = "ˁ",
-  d = "ˀ",
-  e = "֍",
-  f = "৩",
-  g = "ᐁ",
-  h = "⊙",
-  i = "⏺",
-  j = "☻",
-  k = "⚉",
-  l = "⛇",
-  m = "⛄",
-  n = "⛾",
-  o = "❁",
-  p = "❂",
-  q = "⟁",
-  r = "❤",
-  s = "❥",
-  t = "🐱",
-  u = "😼",
-  v = "🙀",
-  w = "😿",
-  x = "🐕",
-  y = "🐶",
-  z = "🐵",
-  aa = "😮",
-  ab = "⸮",
-  ac = "?",
-  ae = "🧋",
-  af = "🍦",
-  ag = "🍴",
-  ah = "👽",
-  ai = "❤",
-  aj = "🧡",
-  ak = "💛",
-  al = "💚",
-  am = "💙",
-  an = "💜",
-  ao = "💓",
-  ap = "💕",
-  aq = "🤚",
-  ar = "📷",
-  as = "🪙",
-  at = "🗿",
-  au = "☢",
-  av = "🚫",
-  aw = "☣",
-  ax = "🅱",
-  ay = "🏳️‍🌈",
-  az = "🏳️‍⚧️",
-  ba = "🍆",
-  bb = "🍑",
-  bc = "🥞",
-  bd = "🧅",
-  be = "🔪",
-  bf = "🏍",
-  bg = "🛺",
-  bh = "🛹",
-  bi = "🏎",
-  bj = "🚗",
-  bk = "🛴",
-  bl = "🖐",
-  bm = "🌵",
-}
 enum foods {}
-enum items {
-  buoy,
-}
 
-class Messasges {
-  constructor(public nickname: string, public greets: Array<string>) {
-    this.greets.push(`Hello, ${this.nickname[0]}`);
-    this.greets.push(`Hey, ${this.nickname[0]}`);
-    this.greets.push(`What's up, ${this.nickname[0]}`);
-    this.greets.push(`Happy valentines day, ${this.nickname[0]}`);
-    this.greets.push(`Is that ${this.nickname[0]}? I've missed you...`);
-  }
-}
 
 const charWidth = 20;
 const windowBounds = {
@@ -128,86 +53,6 @@ function getHitBox(coord: Array<number>) {
   return -1;
 }
 
-const tehMessages = new Messasges("Tess", [
-  "Might I interest you in some cheese?", // in some cheese or a pickle joke
-  "While writing the code for this, chinmai thought of this joke: Why cant pickles be programmers? They only press DILLete",
-]);
-const nacMessages = new Messasges("Naomi", [
-  "Hello Naomi",
-  "Would you like some boba?",
-]);
-const lasMessages = new Messasges("Lauren", [
-  "Hello Lauren",
-  "maybe put some text in here",
-]);
-const almMessages = new Messasges("Alex", ["Hello Alex", ""]);
-const jujMessages = new Messasges("Jang", [
-  "Hello Jang",
-  "have you decided when we will return to monke",
-]);
-const gahMessages = new Messasges("Gab", [
-  "Hello Gab",
-  "have you touched some grass today?",
-]);
-const secMessages = new Messasges("Seth", [
-  "Hello Seth",
-  "pop funko something",
-]);
-const gamMessages = new Messasges("Gary", [
-  "Hello Gary",
-  "i know youve been coding on your rpi, but have you eaten any rpi?",
-]);
-const tycMessages = new Messasges("Tyler", [
-  "Hello Tyler",
-  "something something",
-]);
-const maeMessages = new Messasges("Mayda", [
-  "Hello Mayda",
-  "are you on tinder, cuz i would swipe right (just a joke)",
-]);
-const mieMessages = new Messasges("Milla", [
-  "Hello Milla",
-  "hey, you remind me of that one character from fireboy and lava girl",
-]);
-const dejMessages = new Messasges("Deborah", [
-  "Everybody is good!",
-  "Hey, the lighting over there looks pretty good!",
-]);
-const albMessages = new Messasges("Alissa", [
-  "Hello Alissa",
-  "something really cool and nice",
-]);
-const ampMessages = new Messasges("Amrita", [
-  "Hello Amrita",
-  "have you lisened to  before, you should check them out",
-  "have you lisened to before, you should check them out",
-  "have you lisened to before, you should check them out",
-]);
-const chsMessages = new Messasges("Chinmai", [
-  "Hello Chinmai",
-  "wowee cool nice sentence",
-]);
-
-enum item {
-  buoy = "buoy",
-  bird = "bird",
-  arepa = "Arepas",
-  boba = "boba",
-  cookies = "cookies",
-  cake = "cake",
-  brownies = "brownies",
-  marcons = "Macrons",
-  dino = "Dino Nuggets",
-  pi = "Raspberry Pie",
-  ice = "Ice cream on the fork",
-  fries = "French Fries",
-  salad = "Salad",
-  cheesecake = "Cheesecake",
-  mug = "Mug cake",
-  crepe = "Crepe",
-  maggi = "Maggi",
-}
-
 class Pronouns {
   constructor(public p1: string, public p2: string, public p3: string) {}
 }
@@ -217,6 +62,9 @@ const they = new Pronouns("they", "them", "theirs");
 export abstract class Option {
   name: string;
   shortname: string;
+  optionID = ()=>{
+    this.user.options.indexOf(this)
+  }
   constructor(public user: Person) {}
   dismiss() {
     this.complete();
@@ -224,7 +72,20 @@ export abstract class Option {
   complete() {
     this.user.options = this.user.options.filter((item) => item !== this);
   }
+  showTask(){
+    this.user.websock.emit("options",this.user.options.forEach(element => {
+      element.prettyObject();
+    }) )
+  }
+  prettyObject() {
+    return {
+      name:this.name,
+      shortname:this.shortname,
+      number:this.optionID
+    }
+  }
   abstract accept(): void;
+
 }
 export abstract class HitBoxTriggeredAction extends Option {
   inRoom = true;
@@ -250,19 +111,7 @@ export abstract class HitBoxTriggeredAction extends Option {
 
 }
 
-export class joinChat extends HitBoxTriggeredAction{
-  accept(): void {
-    throw new Error("Method not implemented.");
-  }
-  
-}
 
-export class leaveChat extends Option{
-  accept(): void {
-    throw new Error("Method not implemented.");
-  }
-
-}
 
 export class Travel extends HitBoxTriggeredAction {
   constructor(
@@ -314,6 +163,38 @@ export class EntryRequest extends Option {
   }
 }
 
+export class talkToNPC extends HitBoxTriggeredAction{
+  accept(): void {
+    throw new Error("Method not implemented.");
+  }
+
+}
+export class continueSpeech extends Option{
+  accept(): void {
+    throw new Error("Method not implemented.");
+  }
+  
+}
+
+export class joinChat extends HitBoxTriggeredAction {
+  accept(): void {
+    throw new Error("Method not implemented.");
+  }
+}
+
+export class leaveChat extends Option {
+  accept(): void {
+    throw new Error("Method not implemented.");
+  }
+}
+
+export class sendChat extends Option{
+  accept(): void {
+    throw new Error("Method not implemented.");
+  }
+
+}
+
 export class Person {
   /**
    * the Current active websocket
@@ -351,7 +232,7 @@ export class Person {
     readonly abr: string,
     readonly fullname: Array<string>,
     readonly house: number,
-    public msg: Messasges,
+    public msg: Messages,
     public rep: playable,
     public food: item,
     public bedroomDoor: number,
@@ -589,14 +470,18 @@ export let peopleCodes = new Map([
     ),
   ],
 ]);
+
 /**
- * @class
- * @alias Zone
- * Test?
- */
+ * a chat message
+**/
+class chatMessage{
+  constructor(public sender:Person, public msg:string){
+  }
+}
 abstract class Zone {
   givenItem: item;
-
+  messages = new Array<chatMessage>();
+  inChat = new Array<Person>();
   constructor(
     readonly name: string,
     readonly img: string,
@@ -604,6 +489,13 @@ abstract class Zone {
     readonly doors: Array<number>
   ) {}
   abstract getAccess(user: Person): boolean;
+  joinChat(user:Person){
+    this.inChat.push(user);
+  }
+  sendMessage(user:Person, msg:string){
+    this.messages.push(new chatMessage(user, msg))
+  }
+
   prettyObject() {
     return {
       name: this.name,
@@ -611,6 +503,7 @@ abstract class Zone {
       num: this.num,
     };
   }
+
 }
 /**
  * A zone that has no owner, any user can come and go as they please.
