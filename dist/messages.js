@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.chsMessages = exports.ampMessages = exports.albMessages = exports.dejMessages = exports.maeMessages = exports.tycMessages = exports.gamMessages = exports.secMessages = exports.gahMessages = exports.jujMessages = exports.almMessages = exports.lasMessages = exports.nacMessages = exports.tehMessages = exports.Messages = void 0;
+exports.chsMessages = exports.ampMessages = exports.albMessages = exports.dejMessages = exports.mieMessages = exports.maeMessages = exports.tycMessages = exports.gamMessages = exports.secMessages = exports.gahMessages = exports.jujMessages = exports.almMessages = exports.lasMessages = exports.nacMessages = exports.tehMessages = exports.Messages = void 0;
 class Messages {
     constructor(nickname, greets) {
         this.nickname = nickname;
@@ -50,7 +50,7 @@ exports.maeMessages = new Messages("Mayda", [
     "Hello Mayda",
     "are you on tinder, cuz i would swipe right (just a joke)",
 ]);
-let mieMessages = new Messages("Milla", [
+exports.mieMessages = new Messages("Milla", [
     "Hello Milla",
     "hey, you remind me of that one character from fireboy and lava girl",
 ]);
@@ -72,4 +72,4 @@ exports.chsMessages = new Messages("Chinmai", [
     "Hello Chinmai",
     "wowee cool nice sentence",
 ]);
-//# sourceMappingURL=Messages.js.map
+//# sourceMappingURL=messages.js.map

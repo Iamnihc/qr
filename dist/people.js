@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.roomList = exports.peopleCodes = exports.Person = exports.sendChat = exports.leaveChat = exports.joinChat = exports.continueSpeech = exports.talkToNPC = exports.EntryRequest = exports.Travel = exports.HitBoxTriggeredAction = exports.Option = void 0;
 const item_1 = require("./item");
-const Messages_1 = require("./Messages");
+const messages_1 = require("./messages");
 const playable_1 = require("./playable");
 var foods;
 (function (foods) {
@@ -77,7 +77,7 @@ class Option {
         this.user.options = this.user.options.filter((item) => item !== this);
     }
     showTask() {
-        this.user.websock.emit("options", this.user.options.forEach(element => {
+        this.user.websock.emit("options", this.user.options.forEach((element) => {
             element.prettyObject();
         }));
     }
@@ -85,7 +85,7 @@ class Option {
         return {
             name: this.name,
             shortname: this.shortname,
-            number: this.optionID
+            number: this.optionID,
         };
     }
 }
@@ -256,68 +256,68 @@ exports.Person = Person;
 exports.peopleCodes = new Map([
     [
         "746568",
-        new Person("7456568", "teh", ["Tess", "Hornbeck"], 7, Messages_1.tehMessages, playable_1.playable.bk, item_1.item.arepa, 22),
+        new Person("7456568", "teh", ["Tess", "Hornbeck"], 7, messages_1.tehMessages, playable_1.playable.bk, item_1.item.arepa, 22),
     ],
     [
         "6e6163",
-        new Person("6e6163", "nac", ["Naomi", "Cheng"], 2, Messages_1.nacMessages, playable_1.playable.ae, item_1.item.boba, 19),
+        new Person("6e6163", "nac", ["Naomi", "Cheng"], 2, messages_1.nacMessages, playable_1.playable.ae, item_1.item.boba, 19),
     ],
     [
         "6c6173",
-        new Person("6c6173", "las", ["Lauren", "Staelin"], 3, Messages_1.lasMessages, playable_1.playable.m, item_1.item.cookies, 22),
+        new Person("6c6173", "las", ["Lauren", "Staelin"], 3, messages_1.lasMessages, playable_1.playable.m, item_1.item.cookies, 22),
     ],
     [
         "616c6d",
-        new Person("616c6d", "alm", ["Alex", "McCarthy"], 4, Messages_1.almMessages, playable_1.playable.y, item_1.item.cake, 19),
+        new Person("616c6d", "alm", ["Alex", "McCarthy"], 4, messages_1.almMessages, playable_1.playable.y, item_1.item.cake, 19),
     ],
     [
         "6a756a",
-        new Person("6a756a", "juj", ["Justin", "Jang"], 5, Messages_1.jujMessages, playable_1.playable.v, item_1.item.brownies, 21),
+        new Person("6a756a", "juj", ["Justin", "Jang"], 5, messages_1.jujMessages, playable_1.playable.v, item_1.item.brownies, 21),
     ],
     [
         "676168",
-        new Person("676168", "gah", ["Gab", "Hussain"], 6, Messages_1.gahMessages, playable_1.playable.aq, item_1.item.marcons, 22),
+        new Person("676168", "gah", ["Gab", "Hussain"], 6, messages_1.gahMessages, playable_1.playable.aq, item_1.item.marcons, 22),
     ],
     [
         "736563",
-        new Person("736563", "sec", ["Seth", "Canul"], 7, Messages_1.secMessages, playable_1.playable.c, item_1.item.dino, 21),
+        new Person("736563", "sec", ["Seth", "Canul"], 7, messages_1.secMessages, playable_1.playable.c, item_1.item.dino, 21),
     ],
     [
         "67616d",
-        new Person("67616d", "gam", ["Gary", "Mejia-Martinez"], 8, Messages_1.gamMessages, playable_1.playable.e, item_1.item.pi, 21),
+        new Person("67616d", "gam", ["Gary", "Mejia-Martinez"], 8, messages_1.gamMessages, playable_1.playable.e, item_1.item.pi, 21),
     ],
     [
         "747963",
-        new Person("747963", "tyc", ["Tyler", "Chow"], 9, Messages_1.tycMessages, playable_1.playable.af, item_1.item.ice, 21),
+        new Person("747963", "tyc", ["Tyler", "Chow"], 9, messages_1.tycMessages, playable_1.playable.af, item_1.item.ice, 21),
     ],
     [
         "6d6165",
-        new Person("6d6165", "mae", ["Mayda", "Estrada"], 10, Messages_1.maeMessages, playable_1.playable.ah, item_1.item.fries, 20),
+        new Person("6d6165", "mae", ["Mayda", "Estrada"], 10, messages_1.maeMessages, playable_1.playable.ah, item_1.item.fries, 20),
     ],
     [
         "6d6965",
-        new Person("6d6965", "mie", ["Milla", "Elliott"], 11, Messages_1.maeMessages, playable_1.playable.d, item_1.item.salad, 19),
+        new Person("6d6965", "mie", ["Milla", "Elliott"], 11, messages_1.mieMessages, playable_1.playable.d, item_1.item.salad, 19),
     ],
     [
         "64656a",
-        new Person("64656a", "dej", ["Deborah", "Jung"], 12, Messages_1.dejMessages, playable_1.playable.ar, item_1.item.cheesecake, 20),
+        new Person("64656a", "dej", ["Deborah", "Jung"], 12, messages_1.dejMessages, playable_1.playable.ar, item_1.item.cheesecake, 20),
     ],
     [
         "616c62",
-        new Person("616c62", "alb", ["Alissa", "Beckerman"], 13, Messages_1.albMessages, playable_1.playable.ag, item_1.item.mug, 19),
+        new Person("616c62", "alb", ["Alissa", "Beckerman"], 13, messages_1.albMessages, playable_1.playable.ag, item_1.item.mug, 19),
     ],
     [
         "616d70",
-        new Person("616d70", "amp", ["Amrita", "Pannu"], 14, Messages_1.ampMessages, playable_1.playable.bl, item_1.item.crepe, 19),
+        new Person("616d70", "amp", ["Amrita", "Pannu"], 14, messages_1.ampMessages, playable_1.playable.bl, item_1.item.crepe, 19),
     ],
     [
         "636873",
-        new Person("636873", "chs", ["Chinmai", "Srinivas"], 15, Messages_1.chsMessages, playable_1.playable.bd, item_1.item.maggi, 20),
+        new Person("636873", "chs", ["Chinmai", "Srinivas"], 15, messages_1.chsMessages, playable_1.playable.bd, item_1.item.maggi, 20),
     ],
 ]);
 /**
  * a chat message
-**/
+ **/
 class chatMessage {
     constructor(sender, msg) {
         this.sender = sender;

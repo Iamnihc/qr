@@ -1,11 +1,27 @@
 import { type } from "os";
 import socketIO, { Socket } from "socket.io";
 import { item } from "./item";
-import { Messages,tehMessages, nacMessages, lasMessages, almMessages, jujMessages, gahMessages, secMessages, gamMessages, tycMessages, maeMessages, dejMessages, albMessages, ampMessages, chsMessages } from "./Messages";
+import {
+  Messages,
+  tehMessages,
+  mieMessages,
+  nacMessages,
+  lasMessages,
+  almMessages,
+  jujMessages,
+  gahMessages,
+  secMessages,
+  gamMessages,
+  tycMessages,
+  maeMessages,
+  dejMessages,
+  albMessages,
+  ampMessages,
+  chsMessages,
+} from "./messages";
 import { playable } from "./playable";
 
 enum foods {}
-
 
 const charWidth = 20;
 const windowBounds = {
@@ -62,9 +78,9 @@ const they = new Pronouns("they", "them", "theirs");
 export abstract class Option {
   name: string;
   shortname: string;
-  optionID = ()=>{
-    this.user.options.indexOf(this)
-  }
+  optionID = () => {
+    this.user.options.indexOf(this);
+  };
   constructor(public user: Person) {}
   dismiss() {
     this.complete();
@@ -72,46 +88,45 @@ export abstract class Option {
   complete() {
     this.user.options = this.user.options.filter((item) => item !== this);
   }
-  showTask(){
-    this.user.websock.emit("options",this.user.options.forEach(element => {
-      element.prettyObject();
-    }) )
+  showTask() {
+    this.user.websock.emit(
+      "options",
+      this.user.options.forEach((element) => {
+        element.prettyObject();
+      })
+    );
   }
   prettyObject() {
     return {
-      name:this.name,
-      shortname:this.shortname,
-      number:this.optionID
-    }
+      name: this.name,
+      shortname: this.shortname,
+      number: this.optionID,
+    };
   }
   abstract accept(): void;
-
 }
 export abstract class HitBoxTriggeredAction extends Option {
   inRoom = true;
-  constructor(public user: Person, public hitBoxNumber:number) {
+  constructor(public user: Person, public hitBoxNumber: number) {
     super(user);
   }
-  clearHitTriggers(){
+  clearHitTriggers() {
     this.user.options = this.user.options.filter(
       (x) => "inRoom" in x && x != this
     );
   }
-  stillTriggered(){
-   if (this.user.getHitBox() != this.hitBoxNumber) {
-     this.complete();
-     this.user.options = this.user.options.filter((x) => "inRoom" in x);
-     this.user.sendMessage(
-       "You are too far away to do this. Walk closer and try again."
-     );
-     return true
-   }
-   return false
+  stillTriggered() {
+    if (this.user.getHitBox() != this.hitBoxNumber) {
+      this.complete();
+      this.user.options = this.user.options.filter((x) => "inRoom" in x);
+      this.user.sendMessage(
+        "You are too far away to do this. Walk closer and try again."
+      );
+      return true;
+    }
+    return false;
   }
-
 }
-
-
 
 export class Travel extends HitBoxTriggeredAction {
   constructor(
@@ -121,11 +136,12 @@ export class Travel extends HitBoxTriggeredAction {
   ) {
     super(user, hitBoxNumber);
     this.name = `Travel to ${goToLocation.name}`;
-    this.clearHitTriggers
+    this.clearHitTriggers;
   }
   accept() {
-    if (this.stillTriggered()){return}
- 
+    if (this.stillTriggered()) {
+      return;
+    }
 
     if (this.goToLocation as Hallway) {
       this.user.currentZone = this.goToLocation.num;
@@ -163,17 +179,15 @@ export class EntryRequest extends Option {
   }
 }
 
-export class talkToNPC extends HitBoxTriggeredAction{
+export class talkToNPC extends HitBoxTriggeredAction {
   accept(): void {
     throw new Error("Method not implemented.");
   }
-
 }
-export class continueSpeech extends Option{
+export class continueSpeech extends Option {
   accept(): void {
     throw new Error("Method not implemented.");
   }
-  
 }
 
 export class joinChat extends HitBoxTriggeredAction {
@@ -188,11 +202,10 @@ export class leaveChat extends Option {
   }
 }
 
-export class sendChat extends Option{
+export class sendChat extends Option {
   accept(): void {
     throw new Error("Method not implemented.");
   }
-
 }
 
 export class Person {
@@ -411,7 +424,7 @@ export let peopleCodes = new Map([
       "mie",
       ["Milla", "Elliott"],
       11,
-      maeMessages,
+      mieMessages,
       playable.d,
       item.salad,
       19
@@ -473,10 +486,9 @@ export let peopleCodes = new Map([
 
 /**
  * a chat message
-**/
-class chatMessage{
-  constructor(public sender:Person, public msg:string){
-  }
+ **/
+class chatMessage {
+  constructor(public sender: Person, public msg: string) {}
 }
 abstract class Zone {
   givenItem: item;
@@ -489,11 +501,11 @@ abstract class Zone {
     readonly doors: Array<number>
   ) {}
   abstract getAccess(user: Person): boolean;
-  joinChat(user:Person){
+  joinChat(user: Person) {
     this.inChat.push(user);
   }
-  sendMessage(user:Person, msg:string){
-    this.messages.push(new chatMessage(user, msg))
+  sendMessage(user: Person, msg: string) {
+    this.messages.push(new chatMessage(user, msg));
   }
 
   prettyObject() {
@@ -503,7 +515,6 @@ abstract class Zone {
       num: this.num,
     };
   }
-
 }
 /**
  * A zone that has no owner, any user can come and go as they please.
