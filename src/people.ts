@@ -169,16 +169,15 @@ export class Travel extends HitBoxTriggeredAction {
 }
 
 export class EntryRequest extends Option {
-  house:Hallway|Bedroom
+  house: Hallway | Bedroom;
   constructor(user: Person, public accessTo: Person) {
     super(user);
   }
   accept() {
     if (this.user.athome) {
       this.house = roomList[this.user.house];
-      if ("owner" in this.house){
-    
-        this.house.giveTempAccess(this.accessTo.code)
+      if ("owner" in this.house) {
+        this.house.giveTempAccess(this.accessTo.code);
       }
     } else {
       this.user.sendMessage("You must be at home to let a stranger in");
@@ -215,14 +214,11 @@ export class SendChat extends Option {
   }
 }
 
-
-export class InfoMessage{
+export class InfoMessage {
   prettyPrint(): any {
     throw new Error("Method not implemented.");
   }
-  constructor(public text:string){
-    
-  }
+  constructor(public text: string) {}
 }
 export class Person {
   /**
@@ -311,16 +307,17 @@ export class Person {
    * Re
    * @param addInfoMessage the message to be added to the stack
    */
-  addInfoMessage(addInfoMessage:InfoMessage){
-    this.infoMessages.push(addInfoMessage)
+  addInfoMessage(addInfoMessage: InfoMessage) {
+    this.infoMessages.push(addInfoMessage);
     // return the position in stack of the new message
-    return this.infoMessages.length -1
+    return this.infoMessages.length - 1;
   }
-  removeInfoMessage(messageToRemove:InfoMessage){
-
-  }
-  giveInfoMessages(){
-    this.websock.emit("hoverMessages", this.infoMessages.map((x)=> x.prettyPrint())
+  removeInfoMessage(messageToRemove: InfoMessage) {}
+  giveInfoMessages() {
+    this.websock.emit(
+      "hoverMessages",
+      this.infoMessages.map((x) => x.prettyPrint())
+    );
   }
 }
 
@@ -539,7 +536,7 @@ abstract class Zone {
     readonly doors: Array<number>
   ) {}
   abstract getAccess(user: Person): boolean;
-  
+
   joinChat(user: Person) {
     this.inChat.push(user);
   }
@@ -550,7 +547,9 @@ abstract class Zone {
   }
 
   messagePropagate(user: Person, msg: string) {
-    this.inChat.forEach((user) => user.giveChatMessage(new ChatMessage(user, msg)));
+    this.inChat.forEach((user) =>
+      user.giveChatMessage(new ChatMessage(user, msg))
+    );
   }
 
   prettyObject() {
@@ -569,7 +568,6 @@ class Hallway extends Zone {
   getAccess(user: Person) {
     return true;
   }
-
 }
 /**
  * A zone owned by one user, their personal zone.
@@ -626,7 +624,7 @@ let dangerZone = new Hallway("Danger Zone!", "danger", 0, [20]);
 /**
  * The list of available rooms/zones that the player could ever enter
  */
-export let roomList: Array<Bedroom|Hallway> = [dangerZone];
+export let roomList: Array<Bedroom | Hallway> = [dangerZone];
 // Genreate most of the zones
 
 for (let j of peopleCodes.values()) {
