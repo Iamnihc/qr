@@ -91,7 +91,7 @@ export abstract class Option {
   showTask() {
     this.user.websock.emit(
       "options",
-      this.user.options.forEach((element) => {
+      this.user.options.map((element) => {
         element.prettyObject();
       })
     );
@@ -145,6 +145,7 @@ export class Travel extends HitBoxTriggeredAction {
 
     if (this.goToLocation as Hallway) {
       this.user.currentZone = this.goToLocation.num;
+      this.user.loc = [windowBounds.x.max / 2, windowBounds.y.max / 2];
     }
 
     // is bedroom
@@ -167,12 +168,17 @@ export class Travel extends HitBoxTriggeredAction {
 }
 
 export class EntryRequest extends Option {
-  constructor(user: Person, accessTo: Person) {
+  house:Hallway|Bedroom
+  constructor(user: Person, public accessTo: Person) {
     super(user);
   }
   accept() {
     if (this.user.athome) {
-      this.user.currentZone;
+      this.house = roomList[this.user.house];
+      if ("owner" in this.house){
+    
+        this.house.giveTempAccess(this.accessTo.code)
+      }
     } else {
       this.user.sendMessage("You must be at home to let a stranger in");
     }
@@ -283,6 +289,9 @@ export class Person {
       if (inSquare(this.loc, boxes[i])) return i;
     }
     return -1;
+  }
+  giveMessage(arg0: chatMessage): void {
+    throw new Error("Method not implemented.");
   }
 }
 
@@ -492,7 +501,7 @@ class chatMessage {
 }
 abstract class Zone {
   givenItem: item;
-  messages = new Array<chatMessage>();
+
   inChat = new Array<Person>();
   constructor(
     readonly name: string,
@@ -501,11 +510,18 @@ abstract class Zone {
     readonly doors: Array<number>
   ) {}
   abstract getAccess(user: Person): boolean;
+  
   joinChat(user: Person) {
     this.inChat.push(user);
   }
+  leaveChat(user: Person) {
+    this.inChat = this.inChat.filter((x) => {
+      x != user;
+    });
+  }
+
   sendMessage(user: Person, msg: string) {
-    this.messages.push(new chatMessage(user, msg));
+    this.inChat.forEach((user) => user.giveMessage(new chatMessage(user, msg)));
   }
 
   prettyObject() {
@@ -524,6 +540,7 @@ class Hallway extends Zone {
   getAccess(user: Person) {
     return true;
   }
+
 }
 /**
  * A zone owned by one user, their personal zone.
@@ -580,7 +597,7 @@ let dangerZone = new Hallway("Danger Zone!", "danger", 0, [20]);
 /**
  * The list of available rooms/zones that the player could ever enter
  */
-export let roomList: Array<Zone> = [dangerZone];
+export let roomList: Array<Bedroom|Hallway> = [dangerZone];
 // Genreate most of the zones
 
 for (let j of peopleCodes.values()) {

@@ -77,7 +77,7 @@ class Option {
         this.user.options = this.user.options.filter((item) => item !== this);
     }
     showTask() {
-        this.user.websock.emit("options", this.user.options.forEach((element) => {
+        this.user.websock.emit("options", this.user.options.map((element) => {
             element.prettyObject();
         }));
     }
@@ -126,6 +126,7 @@ class Travel extends HitBoxTriggeredAction {
         }
         if (this.goToLocation) {
             this.user.currentZone = this.goToLocation.num;
+            this.user.loc = [windowBounds.x.max / 2, windowBounds.y.max / 2];
         }
         // is bedroom
         if ("owner" in this.goToLocation) {
@@ -145,10 +146,14 @@ exports.Travel = Travel;
 class EntryRequest extends Option {
     constructor(user, accessTo) {
         super(user);
+        this.accessTo = accessTo;
     }
     accept() {
         if (this.user.athome) {
-            this.user.currentZone;
+            this.house = exports.roomList[this.user.house];
+            if ("owner" in this.house) {
+                this.house.giveTempAccess(this.accessTo.code);
+            }
         }
         else {
             this.user.sendMessage("You must be at home to let a stranger in");
@@ -251,6 +256,9 @@ class Person {
         }
         return -1;
     }
+    giveMessage(arg0) {
+        throw new Error("Method not implemented.");
+    }
 }
 exports.Person = Person;
 exports.peopleCodes = new Map([
@@ -330,14 +338,18 @@ class Zone {
         this.img = img;
         this.num = num;
         this.doors = doors;
-        this.messages = new Array();
         this.inChat = new Array();
     }
     joinChat(user) {
         this.inChat.push(user);
     }
+    leaveChat(user) {
+        this.inChat = this.inChat.filter((x) => {
+            x != user;
+        });
+    }
     sendMessage(user, msg) {
-        this.messages.push(new chatMessage(user, msg));
+        this.inChat.forEach((user) => user.giveMessage(new chatMessage(user, msg)));
     }
     prettyObject() {
         return {
