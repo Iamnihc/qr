@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.roomList = exports.peopleCodes = exports.Person = exports.sendChat = exports.leaveChat = exports.joinChat = exports.continueSpeech = exports.talkToNPC = exports.EntryRequest = exports.Travel = exports.HitBoxTriggeredAction = exports.Option = void 0;
+exports.roomList = exports.peopleCodes = exports.Person = exports.infoMessage = exports.sendChat = exports.leaveChat = exports.joinChat = exports.continueSpeech = exports.talkToNPC = exports.EntryRequest = exports.Travel = exports.HitBoxTriggeredAction = exports.Option = void 0;
 const item_1 = require("./item");
 const messages_1 = require("./messages");
 const playable_1 = require("./playable");
@@ -191,6 +191,12 @@ class sendChat extends Option {
     }
 }
 exports.sendChat = sendChat;
+class infoMessage {
+    constructor(text, checker) {
+        this.text = text;
+    }
+}
+exports.infoMessage = infoMessage;
 class Person {
     constructor(code, abr, fullname, house, msg, rep, food, bedroomDoor, pronoun = they) {
         this.code = code;
@@ -202,6 +208,10 @@ class Person {
         this.food = food;
         this.bedroomDoor = bedroomDoor;
         this.pronoun = pronoun;
+        /**
+         * The list of messages that need to go to the top bar:
+         */
+        this.topMessages = new Array();
         /**
          * the items at the user's disposal
          */
@@ -256,8 +266,11 @@ class Person {
         }
         return -1;
     }
-    giveMessage(arg0) {
+    giveChatMessage(arg0) {
         throw new Error("Method not implemented.");
+    }
+    giveInfoMessages() {
+        this.websock.emit("hoverMessages", this.topMessages.map((x) => x.prettyPrint()));
     }
 }
 exports.Person = Person;
@@ -348,8 +361,8 @@ class Zone {
             x != user;
         });
     }
-    sendMessage(user, msg) {
-        this.inChat.forEach((user) => user.giveMessage(new chatMessage(user, msg)));
+    messagePropagate(user, msg) {
+        this.inChat.forEach((user) => user.giveChatMessage(new chatMessage(user, msg)));
     }
     prettyObject() {
         return {

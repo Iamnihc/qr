@@ -1,3 +1,4 @@
+import { InspectorNotification } from "inspector";
 import { type } from "os";
 import socketIO, { Socket } from "socket.io";
 import { item } from "./item";
@@ -185,36 +186,49 @@ export class EntryRequest extends Option {
   }
 }
 
-export class talkToNPC extends HitBoxTriggeredAction {
+export class TalkToNPC extends HitBoxTriggeredAction {
   accept(): void {
     throw new Error("Method not implemented.");
   }
 }
-export class continueSpeech extends Option {
-  accept(): void {
-    throw new Error("Method not implemented.");
-  }
-}
-
-export class joinChat extends HitBoxTriggeredAction {
+export class ContinueSpeech extends Option {
   accept(): void {
     throw new Error("Method not implemented.");
   }
 }
 
-export class leaveChat extends Option {
+export class JoinChat extends HitBoxTriggeredAction {
   accept(): void {
     throw new Error("Method not implemented.");
   }
 }
 
-export class sendChat extends Option {
+export class LeaveChat extends Option {
   accept(): void {
     throw new Error("Method not implemented.");
   }
 }
 
+export class SendChat extends Option {
+  accept(): void {
+    throw new Error("Method not implemented.");
+  }
+}
+
+
+export class InfoMessage{
+  prettyPrint(): any {
+    throw new Error("Method not implemented.");
+  }
+  constructor(public text:string){
+    
+  }
+}
 export class Person {
+  /**
+   * The list of messages that need to go to the top bar:
+   */
+  infoMessages = new Array<InfoMessage>();
   /**
    * the Current active websocket
    */
@@ -290,8 +304,23 @@ export class Person {
     }
     return -1;
   }
-  giveMessage(arg0: chatMessage): void {
+  giveChatMessage(arg0: ChatMessage): void {
     throw new Error("Method not implemented.");
+  }
+  /**
+   * Re
+   * @param addInfoMessage the message to be added to the stack
+   */
+  addInfoMessage(addInfoMessage:InfoMessage){
+    this.infoMessages.push(addInfoMessage)
+    // return the position in stack of the new message
+    return this.infoMessages.length -1
+  }
+  removeInfoMessage(messageToRemove:InfoMessage){
+
+  }
+  giveInfoMessages(){
+    this.websock.emit("hoverMessages", this.infoMessages.map((x)=> x.prettyPrint())
   }
 }
 
@@ -496,7 +525,7 @@ export let peopleCodes = new Map([
 /**
  * a chat message
  **/
-class chatMessage {
+export class ChatMessage {
   constructor(public sender: Person, public msg: string) {}
 }
 abstract class Zone {
@@ -520,8 +549,8 @@ abstract class Zone {
     });
   }
 
-  sendMessage(user: Person, msg: string) {
-    this.inChat.forEach((user) => user.giveMessage(new chatMessage(user, msg)));
+  messagePropagate(user: Person, msg: string) {
+    this.inChat.forEach((user) => user.giveChatMessage(new ChatMessage(user, msg)));
   }
 
   prettyObject() {

@@ -24,11 +24,11 @@ const hitHeight = 32;
 
 io.on("connection", function (socket: any) {
   //console.log("a user connected");
-  let person: peopleClass.Person;
+  let user: peopleClass.Person;
   socket.on("url", (id: string) => {
-    person = peopleClass.peopleCodes.get(id.substr(1));
-    person.websock = socket.id;
-    socket.emit("person", person);
+    user = peopleClass.peopleCodes.get(id.substr(1));
+    user.websock = socket.id;
+    socket.emit("person", user);
 
     let fullList = Array.from(peopleClass.peopleCodes.values()).map((x) =>
       x.exportList()
@@ -41,48 +41,57 @@ io.on("connection", function (socket: any) {
   });
   socket.on("move", (loc: any) => {
     // for some reason this happens sometimes and i dont want it\
-    if (person == undefined) {
+    if (user == undefined) {
       return;
     }
-    let oldDoor = person.getHitBox();
-    person.loc[0] += loc.mvmt[0];
-    person.loc[1] += loc.mvmt[1];
-    if (person.loc[0] > windowBounds.x.max) {
-      person.loc[0] = windowBounds.x.max;
+    let oldDoor = user.getHitBox();
+    user.loc[0] += loc.mvmt[0];
+    user.loc[1] += loc.mvmt[1];
+    if (user.loc[0] > windowBounds.x.max) {
+      user.loc[0] = windowBounds.x.max;
     }
-    if (person.loc[0] < windowBounds.x.min) {
-      person.loc[0] = windowBounds.x.min;
+    if (user.loc[0] < windowBounds.x.min) {
+      user.loc[0] = windowBounds.x.min;
     }
-    if (person.loc[1] > windowBounds.y.max) {
-      person.loc[1] = windowBounds.y.max;
+    if (user.loc[1] > windowBounds.y.max) {
+      user.loc[1] = windowBounds.y.max;
     }
-    if (person.loc[1] < windowBounds.y.min) {
-      person.loc[1] = windowBounds.y.min;
+    if (user.loc[1] < windowBounds.y.min) {
+      user.loc[1] = windowBounds.y.min;
     }
     //socket.emit("update", person);
     let fullList = Array.from(peopleClass.peopleCodes.values()).map((x) =>
       x.exportList()
     );
-    if (person.getHitBox() != oldDoor) {
-      if (person.getHitBox() != -1) {
+    if (user.getHitBox() != oldDoor) {
+      if (user.getHitBox() != -1) {
         let possibleHover =
           peopleClass.roomList[
-            peopleClass.roomList[person.currentZone].doors[person.getHitBox()]
+            peopleClass.roomList[user.currentZone].doors[user.getHitBox()]
           ];
         // There is no spoon... i mean door
         if (possibleHover != undefined) {
           socket.emit("hoverText", "To: " + possibleHover.name);
-          person.options.push(new peopleClass.Travel(person, possibleHover, person.getHitBox()))
+          
+          let removeCode = user.addInfoMessage(
+            new peopleClass.InfoMessage(
+            `To: ${possibleHover.name}`
+          ));
+
+          user.options.push(
+            new peopleClass.Travel(user, possibleHover, user.getHitBox())
+          );
         }
       } else {
+
         socket.emit("hoverText", "");
       }
     }
     io.emit("update", fullList);
-    console.log(person.loc);
+    console.log(user.loc);
   });
   socket.on("disconnected", () => {
-    person.online = false;
+    user.online = false;
   });
 });
 
