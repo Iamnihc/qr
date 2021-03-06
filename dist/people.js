@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.roomList = exports.peopleCodes = exports.Person = exports.Travel = exports.Option = exports.playable = void 0;
+exports.roomList = exports.peopleCodes = exports.Person = exports.EntryRequest = exports.Travel = exports.leaveChat = exports.joinChat = exports.HitBoxTriggeredAction = exports.Option = exports.playable = void 0;
 var playable;
 (function (playable) {
     playable["a"] = "\u00A7";
@@ -76,57 +76,118 @@ var items;
     items[items["buoy"] = 0] = "buoy";
 })(items || (items = {}));
 class Messasges {
-    constructor(greets) {
+    constructor(nickname, greets) {
+        this.nickname = nickname;
         this.greets = greets;
+        this.greets.push(`Hello, ${this.nickname[0]}`);
+        this.greets.push(`Hey, ${this.nickname[0]}`);
+        this.greets.push(`What's up, ${this.nickname[0]}`);
+        this.greets.push(`Happy valentines day, ${this.nickname[0]}`);
+        this.greets.push(`Is that ${this.nickname[0]}? I've missed you...`);
     }
 }
-const tehMessages = new Messasges([
+const charWidth = 20;
+const windowBounds = {
+    x: { min: 0, max: 1024 - charWidth },
+    y: { min: 0, max: 576 - charWidth },
+};
+const hitWidth = 64;
+const hitHeight = 32;
+const boxes = [
+    [
+        [502 - hitWidth, 502 + hitWidth],
+        [556 - hitHeight, 556],
+    ],
+    [
+        [259 - hitWidth, 259 + hitWidth],
+        [556 - hitHeight, 556],
+    ],
+    [
+        [259 - hitWidth, 259 + hitWidth],
+        [0, hitHeight],
+    ],
+    [
+        [502 - hitWidth, 502 + hitWidth],
+        [0, hitHeight],
+    ],
+    [
+        [753 - hitWidth, 753 + hitWidth],
+        [0, hitHeight],
+    ],
+    [
+        [753 - hitWidth, 753 + hitWidth],
+        [556 - hitHeight, 556],
+    ],
+];
+function hitbox(coord, range) {
+    return coord >= range[0] && coord <= range[1];
+}
+function inSquare(coord, box) {
+    return hitbox(coord[0], box[0]) && hitbox(coord[1], box[1]);
+}
+function getHitBox(coord) {
+    for (let i = 0; i < boxes.length; i++) {
+        if (inSquare(coord, boxes[i]))
+            return i;
+    }
+    return -1;
+}
+const tehMessages = new Messasges("Tess", [
     "Might I interest you in some cheese?",
     "While writing the code for this, chinmai thought of this joke: Why cant pickles be programmers? They only press DILLete",
 ]);
-const nacMessages = new Messasges(["Hello Naomi", "Would you like some boba?"]);
-const lasMessages = new Messasges([
+const nacMessages = new Messasges("Naomi", [
+    "Hello Naomi",
+    "Would you like some boba?",
+]);
+const lasMessages = new Messasges("Lauren", [
     "Hello Lauren",
     "maybe put some text in here",
 ]);
-const almMessages = new Messasges(["Hello Alex", ""]);
-const jujMessages = new Messasges([
+const almMessages = new Messasges("Alex", ["Hello Alex", ""]);
+const jujMessages = new Messasges("Jang", [
     "Hello Jang",
     "have you decided when we will return to monke",
 ]);
-const gahMessages = new Messasges([
+const gahMessages = new Messasges("Gab", [
     "Hello Gab",
     "have you touched some grass today?",
 ]);
-const secMessages = new Messasges(["Hello Seth", "pop funko something"]);
-const gamMessages = new Messasges([
+const secMessages = new Messasges("Seth", [
+    "Hello Seth",
+    "pop funko something",
+]);
+const gamMessages = new Messasges("Gary", [
     "Hello Gary",
     "i know youve been coding on your rpi, but have you eaten any rpi?",
 ]);
-const tycMessages = new Messasges(["Hello Tyler", "something something"]);
-const maeMessages = new Messasges([
+const tycMessages = new Messasges("Tyler", [
+    "Hello Tyler",
+    "something something",
+]);
+const maeMessages = new Messasges("Mayda", [
     "Hello Mayda",
     "are you on tinder, cuz i would swipe right (just a joke)",
 ]);
-const mieMessages = new Messasges([
+const mieMessages = new Messasges("Milla", [
     "Hello Milla",
     "hey, you remind me of that one character from fireboy and lava girl",
 ]);
-const dejMessages = new Messasges([
+const dejMessages = new Messasges("Deborah", [
     "Everybody is good!",
     "Hey, the lighting over there looks pretty good!",
 ]);
-const albMessages = new Messasges([
+const albMessages = new Messasges("Alissa", [
     "Hello Alissa",
     "something really cool and nice",
 ]);
-const ampMessages = new Messasges([
+const ampMessages = new Messasges("Amrita", [
     "Hello Amrita",
     "have you lisened to  before, you should check them out",
     "have you lisened to before, you should check them out",
     "have you lisened to before, you should check them out",
 ]);
-const chsMessages = new Messasges([
+const chsMessages = new Messasges("Chinmai", [
     "Hello Chinmai",
     "wowee cool nice sentence",
 ]);
@@ -161,45 +222,95 @@ const he = new Pronouns("he", "him", "his");
 const she = new Pronouns("she", "her", "hers");
 const they = new Pronouns("they", "them", "theirs");
 class Option {
-    constructor(user, action) {
+    constructor(user) {
         this.user = user;
-        this.action = action;
     }
     dismiss() {
-        return "Don't Do this";
+        this.complete();
+    }
+    complete() {
+        this.user.options = this.user.options.filter((item) => item !== this);
     }
 }
 exports.Option = Option;
-class Travel extends Option {
-    constructor(user, goToLocation) {
-        super(user, () => {
-            if (goToLocation)
-                user.currentZone = goToLocation.num;
-            if ("owner" in goToLocation) {
-                if (goToLocation.getAccess(user)) {
-                    user.currentZone = goToLocation.num;
-                }
-                else {
-                    exports.peopleCodes
-                        .get(goToLocation.owner)
-                        .options.push(new EntryRequest(exports.peopleCodes.get(goToLocation.owner)));
-                }
-            }
-        });
+class HitBoxTriggeredAction extends Option {
+    constructor(user, hitBoxNumber) {
+        super(user);
+        this.user = user;
+        this.hitBoxNumber = hitBoxNumber;
+        this.inRoom = true;
+    }
+    clearHitTriggers() {
+        this.user.options = this.user.options.filter((x) => "inRoom" in x && x != this);
+    }
+    stillTriggered() {
+        if (this.user.getHitBox() != this.hitBoxNumber) {
+            this.complete();
+            this.user.options = this.user.options.filter((x) => "inRoom" in x);
+            this.user.sendMessage("You are too far away to do this. Walk closer and try again.");
+            return true;
+        }
+        return false;
+    }
+}
+exports.HitBoxTriggeredAction = HitBoxTriggeredAction;
+class joinChat extends HitBoxTriggeredAction {
+    accept() {
+        throw new Error("Method not implemented.");
+    }
+}
+exports.joinChat = joinChat;
+class leaveChat extends Option {
+    accept() {
+        throw new Error("Method not implemented.");
+    }
+}
+exports.leaveChat = leaveChat;
+class Travel extends HitBoxTriggeredAction {
+    constructor(user, goToLocation, hitBoxNumber) {
+        super(user, hitBoxNumber);
         this.user = user;
         this.goToLocation = goToLocation;
+        this.hitBoxNumber = hitBoxNumber;
+        this.name = `Travel to ${goToLocation.name}`;
+        this.clearHitTriggers;
+    }
+    accept() {
+        if (this.stillTriggered()) {
+            return;
+        }
+        if (this.goToLocation) {
+            this.user.currentZone = this.goToLocation.num;
+        }
+        // is bedroom
+        if ("owner" in this.goToLocation) {
+            if (this.goToLocation.getAccess(this.user)) {
+                this.user.currentZone = this.goToLocation.num;
+            }
+            else {
+                // Get access from owner
+                exports.peopleCodes
+                    .get(this.goToLocation.owner)
+                    .options.push(new EntryRequest(exports.peopleCodes.get(this.goToLocation.owner), this.user));
+            }
+        }
     }
 }
 exports.Travel = Travel;
 class EntryRequest extends Option {
-    constructor(user) {
-        super(user, () => {
-            if (user.athome) {
-                user.currentZone;
-            }
-        });
+    constructor(user, accessTo) {
+        super(user);
+    }
+    accept() {
+        if (this.user.athome) {
+            this.user.currentZone;
+        }
+        else {
+            this.user.sendMessage("You must be at home to let a stranger in");
+        }
     }
 }
+exports.EntryRequest = EntryRequest;
 class Person {
     constructor(code, abr, fullname, house, msg, rep, food, bedroomDoor, pronoun = they) {
         this.code = code;
@@ -231,11 +342,6 @@ class Person {
          * A list of actions avaliable to the user
          */
         this.options = [];
-        this.msg.greets.push(`Hello, ${this.fullname[0]}`);
-        this.msg.greets.push(`Hey, ${this.fullname[0]}`);
-        this.msg.greets.push(`What's up, ${this.fullname[0]}`);
-        this.msg.greets.push(`Happy valentines day, ${this.fullname[0]}`);
-        this.msg.greets.push(`Is that ${this.fullname[0]}? I've missed you...`);
         this.currentZone = this.house;
     }
     /**
@@ -258,6 +364,17 @@ class Person {
             atHome: this.athome,
         };
         return out;
+    }
+    sendMessage(message) {
+        this.websock.emit("hoverText", message);
+    }
+    updateOptions() { }
+    getHitBox() {
+        for (let i = 0; i < boxes.length; i++) {
+            if (inSquare(this.loc, boxes[i]))
+                return i;
+        }
+        return -1;
     }
 }
 exports.Person = Person;
@@ -369,6 +486,10 @@ class Bedroom extends Zone {
         if (this.allowed.includes(user.code)) {
             return true;
         }
+        if (this.tempAllowed.includes(user.code)) {
+            this.tempAllowed = this.tempAllowed.filter((x) => x != user.code);
+            return true;
+        }
         if (this.owner == user.code) {
             return true;
         }
@@ -379,6 +500,14 @@ class Bedroom extends Zone {
         }
         else {
             this.allowed.push(user.code);
+        }
+    }
+    giveTempAccess(id, user) {
+        if (user == undefined) {
+            this.tempAllowed.push(id);
+        }
+        else {
+            this.tempAllowed.push(user.code);
         }
     }
 }

@@ -10,6 +10,8 @@ const port = 3000; // default port to listen
 const app = express();
 let server = new http.Server(app);
 let io = new socketIO.Server(server);
+
+
 const charWidth = 20;
 const windowBounds = {
   x: { min: 0, max: 1024 - charWidth },
@@ -17,44 +19,45 @@ const windowBounds = {
 };
 const hitWidth = 64;
 const hitHeight = 32;
-const boxes = [
-  [
-    [502 - hitWidth, 502 + hitWidth],
-    [556 - hitHeight, 556],
-  ],
-  [
-    [259 - hitWidth, 259 + hitWidth],
-    [556 - hitHeight, 556],
-  ],
-  [
-    [259 - hitWidth, 259 + hitWidth],
-    [0, hitHeight],
-  ],
-  [
-    [502 - hitWidth, 502 + hitWidth],
-    [0, hitHeight],
-  ],
-  [
-    [753 - hitWidth, 753 + hitWidth],
-    [0, hitHeight],
-  ],
-  [
-    [753 - hitWidth, 753 + hitWidth],
-    [556 - hitHeight, 556],
-  ],
-];
-function hitbox(coord: number, range: Array<number>) {
-  return coord >= range[0] && coord <= range[1];
-}
-function inSquare(coord: Array<number>, box: Array<Array<number>>) {
-  return hitbox(coord[0], box[0]) && hitbox(coord[1], box[1]);
-}
-function getHitBox(coord: Array<number>) {
-  for (let i = 0; i < boxes.length; i++) {
-    if (inSquare(coord, boxes[i])) return i;
-  }
-  return -1;
-}
+// const boxes = [
+//   [
+//     [502 - hitWidth, 502 + hitWidth],
+//     [556 - hitHeight, 556],
+//   ],
+//   [
+//     [259 - hitWidth, 259 + hitWidth],
+//     [556 - hitHeight, 556],
+//   ],
+//   [
+//     [259 - hitWidth, 259 + hitWidth],
+//     [0, hitHeight],
+//   ],
+//   [
+//     [502 - hitWidth, 502 + hitWidth],
+//     [0, hitHeight],
+//   ],
+//   [
+//     [753 - hitWidth, 753 + hitWidth],
+//     [0, hitHeight],
+//   ],
+//   [
+//     [753 - hitWidth, 753 + hitWidth],
+//     [556 - hitHeight, 556],
+//   ],
+// ];
+
+// function hitbox(coord: number, range: Array<number>) {
+//   return coord >= range[0] && coord <= range[1];
+// }
+// function inSquare(coord: Array<number>, box: Array<Array<number>>) {
+//   return hitbox(coord[0], box[0]) && hitbox(coord[1], box[1]);
+// }
+// function getHitBox(coord: Array<number>) {
+//   for (let i = 0; i < boxes.length; i++) {
+//     if (inSquare(coord, boxes[i])) return i;
+//   }
+//   return -1;
+// }
 
 // Socket shit
 
@@ -99,10 +102,10 @@ io.on("connection", function (socket: any) {
       x.exportList()
     );
 
-    if (getHitBox(person.loc) != -1) {
+    if (person.getHitBox() != -1) {
       let possibleHover =
         peopleClass.roomList[
-          peopleClass.roomList[person.currentZone].doors[getHitBox(person.loc)]
+          peopleClass.roomList[person.currentZone].doors[person.getHitBox()]
         ];
       // There is no spoon... i mean door
       if (possibleHover != undefined) {

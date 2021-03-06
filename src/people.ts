@@ -73,56 +73,117 @@ enum items {
 }
 
 class Messasges {
-  constructor(public greets: Array<string>) {}
+  constructor(public nickname: string, public greets: Array<string>) {
+    this.greets.push(`Hello, ${this.nickname[0]}`);
+    this.greets.push(`Hey, ${this.nickname[0]}`);
+    this.greets.push(`What's up, ${this.nickname[0]}`);
+    this.greets.push(`Happy valentines day, ${this.nickname[0]}`);
+    this.greets.push(`Is that ${this.nickname[0]}? I've missed you...`);
+  }
 }
 
-const tehMessages = new Messasges([
+const charWidth = 20;
+const windowBounds = {
+  x: { min: 0, max: 1024 - charWidth },
+  y: { min: 0, max: 576 - charWidth },
+};
+const hitWidth = 64;
+const hitHeight = 32;
+const boxes = [
+  [
+    [502 - hitWidth, 502 + hitWidth],
+    [556 - hitHeight, 556],
+  ],
+  [
+    [259 - hitWidth, 259 + hitWidth],
+    [556 - hitHeight, 556],
+  ],
+  [
+    [259 - hitWidth, 259 + hitWidth],
+    [0, hitHeight],
+  ],
+  [
+    [502 - hitWidth, 502 + hitWidth],
+    [0, hitHeight],
+  ],
+  [
+    [753 - hitWidth, 753 + hitWidth],
+    [0, hitHeight],
+  ],
+  [
+    [753 - hitWidth, 753 + hitWidth],
+    [556 - hitHeight, 556],
+  ],
+];
+function hitbox(coord: number, range: Array<number>) {
+  return coord >= range[0] && coord <= range[1];
+}
+function inSquare(coord: Array<number>, box: Array<Array<number>>) {
+  return hitbox(coord[0], box[0]) && hitbox(coord[1], box[1]);
+}
+function getHitBox(coord: Array<number>) {
+  for (let i = 0; i < boxes.length; i++) {
+    if (inSquare(coord, boxes[i])) return i;
+  }
+  return -1;
+}
+
+const tehMessages = new Messasges("Tess", [
   "Might I interest you in some cheese?", // in some cheese or a pickle joke
   "While writing the code for this, chinmai thought of this joke: Why cant pickles be programmers? They only press DILLete",
 ]);
-const nacMessages = new Messasges(["Hello Naomi", "Would you like some boba?"]);
-const lasMessages = new Messasges([
+const nacMessages = new Messasges("Naomi", [
+  "Hello Naomi",
+  "Would you like some boba?",
+]);
+const lasMessages = new Messasges("Lauren", [
   "Hello Lauren",
   "maybe put some text in here",
 ]);
-const almMessages = new Messasges(["Hello Alex", ""]);
-const jujMessages = new Messasges([
+const almMessages = new Messasges("Alex", ["Hello Alex", ""]);
+const jujMessages = new Messasges("Jang", [
   "Hello Jang",
   "have you decided when we will return to monke",
 ]);
-const gahMessages = new Messasges([
+const gahMessages = new Messasges("Gab", [
   "Hello Gab",
   "have you touched some grass today?",
 ]);
-const secMessages = new Messasges(["Hello Seth", "pop funko something"]);
-const gamMessages = new Messasges([
+const secMessages = new Messasges("Seth", [
+  "Hello Seth",
+  "pop funko something",
+]);
+const gamMessages = new Messasges("Gary", [
   "Hello Gary",
   "i know youve been coding on your rpi, but have you eaten any rpi?",
 ]);
-const tycMessages = new Messasges(["Hello Tyler", "something something"]);
-const maeMessages = new Messasges([
+const tycMessages = new Messasges("Tyler", [
+  "Hello Tyler",
+  "something something",
+]);
+const maeMessages = new Messasges("Mayda", [
   "Hello Mayda",
   "are you on tinder, cuz i would swipe right (just a joke)",
 ]);
-const mieMessages = new Messasges([
+const mieMessages = new Messasges("Milla", [
   "Hello Milla",
   "hey, you remind me of that one character from fireboy and lava girl",
 ]);
-const dejMessages = new Messasges([
+const dejMessages = new Messasges("Deborah", [
   "Everybody is good!",
   "Hey, the lighting over there looks pretty good!",
 ]);
-const albMessages = new Messasges([
+const albMessages = new Messasges("Alissa", [
   "Hello Alissa",
   "something really cool and nice",
 ]);
-const ampMessages = new Messasges([
+const ampMessages = new Messasges("Amrita", [
   "Hello Amrita",
   "have you lisened to  before, you should check them out",
   "have you lisened to before, you should check them out",
   "have you lisened to before, you should check them out",
 ]);
-const chsMessages = new Messasges([
+const chsMessages = new Messasges("Chinmai", [
   "Hello Chinmai",
   "wowee cool nice sentence",
 ]);
@@ -155,38 +216,101 @@ const she = new Pronouns("she", "her", "hers");
 const they = new Pronouns("they", "them", "theirs");
 export abstract class Option {
   name: string;
-
-  constructor(public user: Person, public action: Function) {}
+  shortname: string;
+  constructor(public user: Person) {}
   dismiss() {
-    return "Don't Do this";
+    this.complete();
   }
+  complete() {
+    this.user.options = this.user.options.filter((item) => item !== this);
+  }
+  abstract accept(): void;
 }
-export class Travel extends Option {
-  constructor(public user: Person, public goToLocation: Hallway | Bedroom) {
-    super(user, () => {
-      if (goToLocation as Hallway) user.currentZone = goToLocation.num;
-      if ("owner" in goToLocation) {
-        if (goToLocation.getAccess(user)) {
-          user.currentZone = goToLocation.num;
-        } else {
-          peopleCodes
-            .get(goToLocation.owner)
-            .options.push(
-              new EntryRequest(peopleCodes.get(goToLocation.owner))
-            );
-        }
+export abstract class HitBoxTriggeredAction extends Option {
+  inRoom = true;
+  constructor(public user: Person, public hitBoxNumber:number) {
+    super(user);
+  }
+  clearHitTriggers(){
+    this.user.options = this.user.options.filter(
+      (x) => "inRoom" in x && x != this
+    );
+  }
+  stillTriggered(){
+   if (this.user.getHitBox() != this.hitBoxNumber) {
+     this.complete();
+     this.user.options = this.user.options.filter((x) => "inRoom" in x);
+     this.user.sendMessage(
+       "You are too far away to do this. Walk closer and try again."
+     );
+     return true
+   }
+   return false
+  }
+
+}
+
+export class joinChat extends HitBoxTriggeredAction{
+  accept(): void {
+    throw new Error("Method not implemented.");
+  }
+  
+}
+
+export class leaveChat extends Option{
+  accept(): void {
+    throw new Error("Method not implemented.");
+  }
+
+}
+
+export class Travel extends HitBoxTriggeredAction {
+  constructor(
+    public user: Person,
+    public goToLocation: Hallway | Bedroom,
+    public hitBoxNumber: number
+  ) {
+    super(user, hitBoxNumber);
+    this.name = `Travel to ${goToLocation.name}`;
+    this.clearHitTriggers
+  }
+  accept() {
+    if (this.stillTriggered()){return}
+ 
+
+    if (this.goToLocation as Hallway) {
+      this.user.currentZone = this.goToLocation.num;
+    }
+
+    // is bedroom
+    if ("owner" in this.goToLocation) {
+      if (this.goToLocation.getAccess(this.user)) {
+        this.user.currentZone = this.goToLocation.num;
+      } else {
+        // Get access from owner
+        peopleCodes
+          .get(this.goToLocation.owner)
+          .options.push(
+            new EntryRequest(
+              peopleCodes.get(this.goToLocation.owner),
+              this.user
+            )
+          );
       }
-    });
+    }
   }
 }
 
-class EntryRequest extends Option {
-  constructor(user: Person) {
-    super(user, () => {
-      if (user.athome) {
-        user.currentZone;
-      }
-    });
+export class EntryRequest extends Option {
+  constructor(user: Person, accessTo: Person) {
+    super(user);
+  }
+  accept() {
+    if (this.user.athome) {
+      this.user.currentZone;
+    } else {
+      this.user.sendMessage("You must be at home to let a stranger in");
+    }
   }
 }
 
@@ -233,11 +357,6 @@ export class Person {
     public bedroomDoor: number,
     public pronoun: Pronouns = they
   ) {
-    this.msg.greets.push(`Hello, ${this.fullname[0]}`);
-    this.msg.greets.push(`Hey, ${this.fullname[0]}`);
-    this.msg.greets.push(`What's up, ${this.fullname[0]}`);
-    this.msg.greets.push(`Happy valentines day, ${this.fullname[0]}`);
-    this.msg.greets.push(`Is that ${this.fullname[0]}? I've missed you...`);
     this.currentZone = this.house;
   }
   /**
@@ -260,6 +379,16 @@ export class Person {
       atHome: this.athome,
     };
     return out;
+  }
+  sendMessage(message: string) {
+    this.websock.emit("hoverText", message);
+  }
+  updateOptions() {}
+  getHitBox() {
+    for (let i = 0; i < boxes.length; i++) {
+      if (inSquare(this.loc, boxes[i])) return i;
+    }
+    return -1;
   }
 }
 
@@ -499,6 +628,7 @@ class Hallway extends Zone {
 class Bedroom extends Zone {
   owner: string;
   allowed: Array<string>;
+  tempAllowed: Array<string>;
   constructor(user: Person) {
     super(`${user.fullname[0]}'s Bedroom`, `${user.abr}.png`, 0, [
       user.bedroomDoor,
@@ -511,10 +641,15 @@ class Bedroom extends Zone {
     if (this.allowed.includes(user.code)) {
       return true;
     }
+    if (this.tempAllowed.includes(user.code)) {
+      this.tempAllowed = this.tempAllowed.filter((x) => x != user.code);
+      return true;
+    }
     if (this.owner == user.code) {
       return true;
     }
   }
+  // Give access to a user with either a person object or just a user
   giveAccess(id: string): void;
   giveAccess(id: string, user: Person): void;
   giveAccess(id: string, user?: Person) {
@@ -522,6 +657,16 @@ class Bedroom extends Zone {
       this.allowed.push(id);
     } else {
       this.allowed.push(user.code);
+    }
+  }
+  // Let a user into ur room once
+  giveTempAccess(id: string): void;
+  giveTempAccess(id: string, user: Person): void;
+  giveTempAccess(id: string, user?: Person) {
+    if (user == undefined) {
+      this.tempAllowed.push(id);
+    } else {
+      this.tempAllowed.push(user.code);
     }
   }
 }
